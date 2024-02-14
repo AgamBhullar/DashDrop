@@ -5,14 +5,36 @@
 //  Created by Agam Bhullar on 2/13/24.
 //
 
-import SwiftUI
+import Foundation
+import MapKit
 
-struct ContentViewModel: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+class ContentViewModel: NSObject, ObservableObject {
+    
+    @Published private(set) var results: Array<AddressResult> = []
+    @Published var searchableText = ""
+
+    private lazy var localSearchCompleter: MKLocalSearchCompleter = {
+        let completer = MKLocalSearchCompleter()
+        completer.delegate = self
+        return completer
+    }()
+    
+    func searchAddress(_ searchableText: String) {
+        guard searchableText.isEmpty == false else { return }
+        localSearchCompleter.queryFragment = searchableText
     }
 }
 
-#Preview {
-    ContentViewModel()
+extension ContentViewModel: MKLocalSearchCompleterDelegate {
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        Task { @MainActor in
+            results = completer.results.map {
+                AddressResult(title: $0.title, subtitle: $0.subtitle)
+            }
+        }
+    }
+    
+    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+        print(error)
+    }
 }

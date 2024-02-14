@@ -9,10 +9,16 @@ import SwiftUI
 
 struct StoreSelectionView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        //NavigationView {
+            List {
+                NavigationLink(destination: PackageSelectionView(store: "UPS")) {
+                    Text("UPS")
+                }
+                NavigationLink(destination: PackageSelectionView(store: "FedEx")) {
+                    Text("FedEx")
+                }
+            }
+            .navigationTitle("Select Store")
+       // }
     }
-}
-
-#Preview {
-    StoreSelectionView()
 }

@@ -5,14 +5,14 @@
 //  Created by Agam Bhullar on 2/13/24.
 //
 
-import SwiftUI
+import Foundation
+import MapKit
 
-struct AnnotationItem: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct AnnotationItem: Identifiable {
+    let id = UUID()
+    let latitude: Double
+    let longitude: Double
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
-}
-
-#Preview {
-    AnnotationItem()
 }
