@@ -10,6 +10,8 @@ import SwiftUI
 struct ContentView: View {
     
     @StateObject var viewModel: ContentViewModel
+    @StateObject var orderDetails = OrderDetails() 
+    @StateObject var mapViewModel = MapViewModel()
     @State private var isRequestingPickup = false
     @FocusState private var isFocusedTextField: Bool
     
@@ -41,7 +43,7 @@ struct ContentView: View {
                             }
                         
                         List(self.viewModel.results) { address in
-                            AddressRow(address: address)
+                            AddressRow(address: address, orderDetails: orderDetails, mapViewModel: mapViewModel)
                                 .listRowBackground(backgroundColor)
                         }
                         .listStyle(.plain)
@@ -62,8 +64,8 @@ struct ContentView: View {
         var backgroundColor: Color = Color.init(uiColor: .systemGray6)
     }
 
-    struct ContentView_Previews: PreviewProvider {
-        static var previews: some View {
-            ContentView(viewModel: ContentViewModel())
-        }
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView(viewModel: ContentViewModel())
     }
+}

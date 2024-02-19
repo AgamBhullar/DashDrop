@@ -27,12 +27,29 @@ class ContentViewModel: NSObject, ObservableObject {
 
 extension ContentViewModel: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        Task { @MainActor in
-            results = completer.results.map {
-                AddressResult(title: $0.title, subtitle: $0.subtitle)
+        Task {
+            for completion in completer.results {
+                let searchRequest = MKLocalSearch.Request(completion: completion)
+                let search = MKLocalSearch(request: searchRequest)
+                do {
+                    let response = try await search.start()
+                    if let item = response.mapItems.first {
+                        let placemark = item.placemark
+                        // Create your address string here
+                        let subtitle = "\(placemark.thoroughfare ?? ""), \(placemark.locality ?? ""), \(placemark.administrativeArea ?? "") \(placemark.postalCode ?? "")"
+                        let addressResult = AddressResult(title: completion.title, subtitle: subtitle)
+                        
+                        await MainActor.run {
+                            self.results.append(addressResult)
+                        }
+                    }
+                } catch {
+                    print("Error searching for placemark: \(error)")
+                }
             }
         }
     }
+
     
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
         print(error)

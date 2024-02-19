@@ -4,15 +4,17 @@
 //
 //  Created by Agam Bhullar on 2/14/24.
 //
-
+import Foundation
+import MapKit
 import SwiftUI
 
-struct OrderDetails: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-#Preview {
-    OrderDetails()
+class OrderDetails: ObservableObject {
+    @Published var address: AddressResult?
+    @Published var store: String?
+    @Published var packageType: String?
+    @Published var quantity: Int = 1
+    @Published var qrCodeImage: UIImage?
+    @Published var prePaidLabelChosen: Bool = false
+    @Published var fullAddress: String?
+    @Published var qrCodeImageURL: String?
 }

@@ -23,6 +23,7 @@
 		CAEEE2302B7C27BC007BAEA9 /* FinalStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEEE22F2B7C27BC007BAEA9 /* FinalStepView.swift */; };
 		CAEEE2322B7C2B4C007BAEA9 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEEE2312B7C2B4C007BAEA9 /* ImagePicker.swift */; };
 		CAEEE2342B7C3E44007BAEA9 /* OrderConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEEE2332B7C3E44007BAEA9 /* OrderConfirmationView.swift */; };
+		CAEEE2362B7D7D8B007BAEA9 /* OrderDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEEE2352B7D7D8B007BAEA9 /* OrderDetails.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		CAEEE22F2B7C27BC007BAEA9 /* FinalStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalStepView.swift; sourceTree = "<group>"; };
 		CAEEE2312B7C2B4C007BAEA9 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		CAEEE2332B7C3E44007BAEA9 /* OrderConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderConfirmationView.swift; sourceTree = "<group>"; };
+		CAEEE2352B7D7D8B007BAEA9 /* OrderDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetails.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 			children = (
 				CAEEE2212B7BF6BA007BAEA9 /* MapViewModel.swift */,
 				CAEEE2232B7BF6E7007BAEA9 /* ContentViewModel.swift */,
+				CAEEE2352B7D7D8B007BAEA9 /* OrderDetails.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 				CAEEE2242B7BF6E7007BAEA9 /* ContentViewModel.swift in Sources */,
 				CAEEE20D2B7BF55F007BAEA9 /* DashDropApp.swift in Sources */,
 				CAEEE2302B7C27BC007BAEA9 /* FinalStepView.swift in Sources */,
+				CAEEE2362B7D7D8B007BAEA9 /* OrderDetails.swift in Sources */,
 				CAEEE21E2B7BF640007BAEA9 /* AnnotationItem.swift in Sources */,
 				CAEEE22A2B7BF744007BAEA9 /* ClearButton.swift in Sources */,
 				CAEEE22E2B7C27AB007BAEA9 /* PackageSelectionView.swift in Sources */,

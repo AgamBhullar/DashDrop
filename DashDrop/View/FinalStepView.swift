@@ -11,6 +11,7 @@ struct FinalStepView: View {
     var store: String
     var packageType: String
     var quantity: Int
+    @ObservedObject var orderDetails: OrderDetails
     @State private var showingAlert = false
     @State private var uploadQRCode = false // Assume this will trigger another view for QR code upload
     @State private var showingImagePicker = false
@@ -32,6 +33,7 @@ struct FinalStepView: View {
                     uploadQRCode = true
                 }
                 Button("Pre Paid Label") {
+                    orderDetails.prePaidLabelChosen.toggle()
                     showingAlert = true
                 }
                 .alert("Please make sure to properly install the label on the package before placing it for delivery.", isPresented: $showingAlert) {
@@ -39,7 +41,19 @@ struct FinalStepView: View {
                 }
                 Spacer()
                 Button("Create Order") {
-                    // Handle order creation logic here
+                    if showingImagePicker {
+                        // If showingImagePicker is true, it implies the user intends to upload an image.
+                        // The ImagePicker's onImageUploaded closure should handle setting the qrCodeImageURL
+                        // and then call sendOrderDetails(), ensuring order details are sent after image upload.
+                        
+                        // Trigger the ImagePicker to show.
+                        showingImagePicker = true
+                    } else {
+                        // If there's no need for an image upload, send order details immediately.
+                        sendOrderDetails()
+                    }
+                    
+                    // Navigate to confirmation view or set orderCreated to true if that's handled elsewhere.
                     orderCreated = true
                     navigateToConfirmation = true
                 }
@@ -55,10 +69,60 @@ struct FinalStepView: View {
 //        .sheet(isPresented: $orderCreated) {
 //            OrderConfirmationView()
 //        }
-        .sheet(isPresented: $showingImagePicker) {
-            ImagePicker(selectedImage: $image)
-        }
+            .sheet(isPresented: $showingImagePicker) {
+                ImagePicker(selectedImage: $image, onImageUploaded: { imageUrl in
+                    print("Image URL for order details: \(imageUrl)")
+                    self.orderDetails.qrCodeImageURL = imageUrl
+                    self.sendOrderDetails() // Call sendOrderDetails here after image URL is set
+                })
+            }
         .padding()
         .navigationTitle("Final Step")
     }
+    
+    private func sendOrderDetails() {
+        guard let webhookURL = URL(string: "https://hooks.zapier.com/hooks/catch/17935422/3l7ian2/") else {
+            print("Invalid webhook URL")
+            return
+        }
+
+        var request = URLRequest(url: webhookURL)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        // Assuming `orderDetails` is an instance of `OrderDetails` passed to this view
+        let qrCodeURL = orderDetails.qrCodeImage != nil ? "URL to the uploaded QR code image" : "No QR Code provided"
+        let address = orderDetails.address?.title ?? "No address provided" // Make sure to handle address appropriately
+        let fullAddress = "\(orderDetails.address?.title ?? "") \(orderDetails.address?.subtitle ?? "")"
+
+        let orderInfo: [String: Any] = [
+            "address": fullAddress,
+            "store": orderDetails.store ?? "No store selected",
+            "packageType": orderDetails.packageType ?? "No package type selected",
+            "quantity": orderDetails.quantity,
+            "qrCodeURL": orderDetails.qrCodeImageURL ?? "No QR Code provided",
+            "prePaidLabelChosen": orderDetails.prePaidLabelChosen ? "Yes" : "No"
+        ]
+        
+        print("Sending Order Info to Zapier: \(orderInfo)") // Add this line
+
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: orderInfo, options: [])
+            request.httpBody = jsonData
+        } catch {
+            print("Error serializing order data: \(error.localizedDescription)")
+            return
+        }
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let _ = data, error == nil else {
+                print("Error sending order details: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            // Handle successful POST request if needed
+            // For example, navigate to the confirmation view
+        }
+        task.resume()
+    }
+
 }

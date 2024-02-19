@@ -10,10 +10,12 @@ import SwiftUI
 struct AddressRow: View {
     
     let address: AddressResult
+    @ObservedObject var orderDetails: OrderDetails
+    @ObservedObject var mapViewModel: MapViewModel
     
     var body: some View {
         NavigationLink {
-            MapView(address: address)
+            MapView(address: address, orderDetails: orderDetails)
         } label: {
             VStack(alignment: .leading) {
                 Text(address.title)
@@ -22,5 +24,12 @@ struct AddressRow: View {
             }
         }
         .padding(.bottom, 2)
+        .onTapGesture {
+            mapViewModel.getFullAddress(from: address) { fullAddress in
+                DispatchQueue.main.async {
+                    orderDetails.fullAddress = fullAddress
+                }
+            }
+        }
     }
 }

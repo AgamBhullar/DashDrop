@@ -1,51 +1,16 @@
-//
-//  MapView.swift
-//  DashDrop
-//
-//  Created by Agam Bhullar on 2/13/24.
-//
-
-//import SwiftUI
-//import MapKit
-//
-//struct MapView: View {
-//    
-//    @StateObject private var viewModel = MapViewModel()
-//    @State private var navigateToStoreSelection = false
-//
-//    private let address: AddressResult
-//    
-//    init(address: AddressResult) {
-//        self.address = address
-//    }
-//    
-//    var body: some View {
-//        Map(
-//            coordinateRegion: $viewModel.region,
-//            annotationItems: viewModel.annotationItems,
-//            annotationContent: { item in
-//                MapMarker(coordinate: item.coordinate)
-//            })
-//        .onAppear {
-//            self.viewModel.getPlace(from: address)
-//        }
-//        .edgesIgnoringSafeArea(.bottom)
-//    }
-//}
-
-
 import SwiftUI
 import MapKit
 
 struct MapView: View {
-    
+    @ObservedObject var orderDetails: OrderDetails
     @StateObject private var viewModel = MapViewModel()
     @State private var navigateToStoreSelection = false // Used to activate NavigationLink programmatically
     
     private let address: AddressResult
     
-    init(address: AddressResult) {
+    init(address: AddressResult, orderDetails: OrderDetails) {
         self.address = address
+        self._orderDetails = ObservedObject(initialValue: orderDetails) // Correct way to initialize
     }
     
     var body: some View {
@@ -56,11 +21,11 @@ struct MapView: View {
                 })
                 VStack {
                     Spacer()
-                    NavigationLink(destination: StoreSelectionView(), isActive: $navigateToStoreSelection) { EmptyView() }
+                    NavigationLink(destination: StoreSelectionView(orderDetails: orderDetails), isActive: $navigateToStoreSelection) { EmptyView() }
                     Button("Select Store") {
                         navigateToStoreSelection = true // This triggers the navigation
                     }
-                    .padding()
+                    .padding(.bottom, 20)
                     .background(Color.blue)
                     .foregroundColor(.white)
                     .cornerRadius(8)
@@ -69,6 +34,7 @@ struct MapView: View {
             }
             .onAppear {
                 self.viewModel.getPlace(from: address)
+                self.orderDetails.address = address
             }
             .edgesIgnoringSafeArea(.bottom)
             .navigationBarTitle("Map", displayMode: .inline) // Optionally set a navigation bar title

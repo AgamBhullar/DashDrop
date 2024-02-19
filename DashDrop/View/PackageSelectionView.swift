@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PackageSelectionView: View {
     var store: String
+    @ObservedObject var orderDetails: OrderDetails 
     @State private var selectedPackageType: String? = nil
     @State private var quantity: Int = 1
     @State private var navigateToFinalStep = false
@@ -25,12 +26,17 @@ struct PackageSelectionView: View {
                         .cornerRadius(5)
                         .onTapGesture {
                             selectedPackageType = packageType
+                            orderDetails.packageType = selectedPackageType
+                            orderDetails.packageType = packageType
                         }
                 }
             }
             
             Stepper("Quantity: \(quantity)", value: $quantity, in: 1...10)
                 .padding()
+                .onChange(of: quantity) { newValue in
+                    orderDetails.quantity = newValue // Update the orderDetails object here
+                }
             
             Button("Final Step") {
                 navigateToFinalStep = true // This will trigger the NavigationLink
@@ -41,10 +47,14 @@ struct PackageSelectionView: View {
             .cornerRadius(8)
             
             // Invisible NavigationLink to trigger programmatic navigation
-            NavigationLink(destination: FinalStepView(store: store, packageType: selectedPackageType ?? "Box", quantity: quantity), isActive: $navigateToFinalStep) {
+            NavigationLink(destination: FinalStepView(store: store, packageType: selectedPackageType ?? "Box", quantity: quantity, orderDetails: orderDetails), isActive: $navigateToFinalStep) {
                 EmptyView()
             }
+
         }
         .navigationTitle("Package Selection")
+        .onAppear {
+            orderDetails.store = store
+        }
     }
 }
