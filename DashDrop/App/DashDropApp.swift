@@ -11,10 +11,11 @@ import SwiftUI
 struct DashDropApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(viewModel: ContentViewModel())
+            //ContentView(viewModel: ContentViewModel())
+            HomeView()
         }
     }
 }
 
 
-//Agam has Pyaar for Basota
+

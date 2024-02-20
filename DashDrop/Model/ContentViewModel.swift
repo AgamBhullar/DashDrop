@@ -1,57 +1,37 @@
-//
-//  ContentViewModel.swift
-//  DashDrop
-//
-//  Created by Agam Bhullar on 2/13/24.
-//
 
 import Foundation
 import MapKit
+import Combine
 
-class ContentViewModel: NSObject, ObservableObject {
-    
-    @Published private(set) var results: Array<AddressResult> = []
-    @Published var searchableText = ""
+class ContentViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegate {
+    @Published var searchQuery = ""
+    @Published var suggestions: [MKLocalSearchCompletion] = []
 
-    private lazy var localSearchCompleter: MKLocalSearchCompleter = {
-        let completer = MKLocalSearchCompleter()
-        completer.delegate = self
-        return completer
-    }()
-    
-    func searchAddress(_ searchableText: String) {
-        guard searchableText.isEmpty == false else { return }
-        localSearchCompleter.queryFragment = searchableText
-    }
-}
+    private var searchCompleter = MKLocalSearchCompleter()
+    private var cancellables: Set<AnyCancellable> = []
 
-extension ContentViewModel: MKLocalSearchCompleterDelegate {
-    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        Task {
-            for completion in completer.results {
-                let searchRequest = MKLocalSearch.Request(completion: completion)
-                let search = MKLocalSearch(request: searchRequest)
-                do {
-                    let response = try await search.start()
-                    if let item = response.mapItems.first {
-                        let placemark = item.placemark
-                        // Create your address string here
-                        let subtitle = "\(placemark.thoroughfare ?? ""), \(placemark.locality ?? ""), \(placemark.administrativeArea ?? "") \(placemark.postalCode ?? "")"
-                        let addressResult = AddressResult(title: completion.title, subtitle: subtitle)
-                        
-                        await MainActor.run {
-                            self.results.append(addressResult)
-                        }
-                    }
-                } catch {
-                    print("Error searching for placemark: \(error)")
-                }
+    override init() {
+        super.init()
+        searchCompleter.delegate = self
+
+        // Setup Combine to listen to searchQuery changes
+        $searchQuery
+            .removeDuplicates()
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .sink { [weak self] (query) in
+                self?.searchCompleter.queryFragment = query
             }
+            .store(in: &cancellables)
+    }
+    
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        // Update your UI with the suggestions
+        DispatchQueue.main.async {
+            self.suggestions = completer.results
         }
     }
 
-    
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-        print(error)
+        print("Error: \(error.localizedDescription)")
     }
 }

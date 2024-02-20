@@ -9,10 +9,20 @@ import SwiftUI
 
 struct HomeView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            VStack {
+                // Your HomeView content here
+                NavigationLink(destination: ContentView()) {
+                    Text("Request Pickup")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                }
+                .padding()
+            }
+            .navigationBarTitle("Home", displayMode: .inline)
+        }
     }
-}
-
-#Preview {
-    HomeView()
 }

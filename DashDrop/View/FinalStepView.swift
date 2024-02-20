@@ -92,11 +92,12 @@ struct FinalStepView: View {
 
         // Assuming `orderDetails` is an instance of `OrderDetails` passed to this view
         let qrCodeURL = orderDetails.qrCodeImage != nil ? "URL to the uploaded QR code image" : "No QR Code provided"
-        let address = orderDetails.address?.title ?? "No address provided" // Make sure to handle address appropriately
-        let fullAddress = "\(orderDetails.address?.title ?? "") \(orderDetails.address?.subtitle ?? "")"
+        //let address = orderDetails.address?.title ?? "No address provided" // Make sure to handle address appropriately
+        let fullAddress = orderDetails.fullAddress ?? "No address provided"
 
+        print("Full Address before sending: \(orderDetails.fullAddress ?? "No address")")
         let orderInfo: [String: Any] = [
-            "address": fullAddress,
+            "address": orderDetails.fullAddress ?? "No address provided",
             "store": orderDetails.store ?? "No store selected",
             "packageType": orderDetails.packageType ?? "No package type selected",
             "quantity": orderDetails.quantity,
