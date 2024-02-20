@@ -43,7 +43,7 @@ struct SettingsView: View {
                     }
                 }
                 .listRowSeparatorTint(.orange)
-                .listRowBackground(Color.black.opacity(0.2))
+                .listRowBackground(Color.black.opacity(0.4))
                 
                 Section {
                     Button(action: {
@@ -68,7 +68,7 @@ struct SettingsView: View {
                         }
                     }) {
                         ZStack {
-                            Color.black.opacity(0.2)
+                            Color.black.opacity(0.4)
                                 .frame(width: 80, height: 40)
                                 .cornerRadius(10)
                             
@@ -84,7 +84,7 @@ struct SettingsView: View {
                     
                     Button(action: userModel.logout) {
                         ZStack {
-                            Color.black.opacity(0.2)
+                            Color.black.opacity(0.4)
                                 .frame(width: 100, height: 40)
                                 .cornerRadius(10)
                             
@@ -116,15 +116,16 @@ struct SettingsView: View {
             .background {
                 Image("Background2")
                     
-                    .overlay(Color("CustomColor1").opacity(0.2))
+                    .overlay(Color("CustomColor1").opacity(0.4))
             }
 
-            .navigationBarTitle("Settings", displayMode: .inline)
+            .navigationBarTitle("User Profile", displayMode: .inline)
             .navigationBarItems(leading: Button(action: {
                     self.presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "arrow.left")
-                    .foregroundColor(Color("CustomColor1"))
+                    //.foregroundColor(Color("CustomColor1"))
+                    .foregroundColor(.white)
                     .imageScale(.large)
             })
             .onAppear {

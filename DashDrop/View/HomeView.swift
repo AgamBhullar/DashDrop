@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HomeView: View {
+    @EnvironmentObject var userModel: UserModel
+    @State private var isButtonPressed = false
     var body: some View {
         NavigationView {
             VStack {
@@ -17,12 +19,32 @@ struct HomeView: View {
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
-                        .background(Color.blue)
+                        .background(isButtonPressed ? Color("CustomColor1").opacity(0.8) : Color("CustomColor1"))
                         .cornerRadius(10)
+                        .shadow(radius: 10)
                 }
+                //Animation for Button Press
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { _ in isButtonPressed = true }
+                        .onEnded { _ in isButtonPressed = false }
+                )
+                .animation(.easeInOut(duration: 0.2), value: isButtonPressed)
                 .padding()
             }
             .navigationBarTitle("Home", displayMode: .inline)
+            .navigationBarItems(
+                trailing: NavigationLink(destination: SettingsView().environmentObject(userModel)) {
+                    Image(systemName: "person")
+                        .foregroundColor(Color("CustomColor1"))
+                    
+                }
+            )
         }
+    }
+}
+struct HomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        HomeView().environmentObject(UserModel())
     }
 }
