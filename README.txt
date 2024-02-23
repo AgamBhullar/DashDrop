@@ -30,7 +30,7 @@ convenience through a tech driven solution to simplify the return process for al
 - **Name**: [Agam Bhullar] [Harpreet Basota] [Arjun Takhar]
 - **Student ID**: [921637853] [920698495] [922019289]
 
-![3 Idiots](https://dochub.com/agambhullar313/gDqeQZ6VzQ0vk2yK0jLO4Y/3idiots-png "3 Idiots Image")
+![Team Photo](3Idiots.png)
 
 
 
