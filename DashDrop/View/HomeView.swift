@@ -9,12 +9,14 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var userModel: UserModel
+    @EnvironmentObject var navigationController: NavigationController
     @State private var isButtonPressed = false
+    
     var body: some View {
         NavigationView {
             VStack {
                 // Your HomeView content here
-                NavigationLink(destination: ContentView()) {
+                NavigationLink(destination: ContentView(), isActive: $navigationController.shouldShowHomeView) {
                     Text("Request Pickup")
                         .font(.headline)
                         .foregroundColor(.white)
@@ -45,6 +47,12 @@ struct HomeView: View {
 }
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView().environmentObject(UserModel())
+        // Create an instance of NavigationController
+        let navigationController = NavigationController()
+        
+        // Provide both the UserModel and NavigationController as environment objects
+        HomeView()
+            .environmentObject(UserModel())
+            .environmentObject(navigationController)
     }
 }

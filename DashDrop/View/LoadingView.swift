@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LoadingView: View {
     @EnvironmentObject var userModel: UserModel
+    @EnvironmentObject var navigationController: NavigationController
     @State var isLoading = true
     @State var errorString: String?
 
@@ -9,7 +10,7 @@ struct LoadingView: View {
         VStack {
             if isLoading {
                 ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    .progressViewStyle(CircularProgressViewStyle(tint: .black))
             } else if let errorString = errorString {
                 Text(errorString)
             }
@@ -17,10 +18,11 @@ struct LoadingView: View {
         
         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(
-                    Image("Background")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .edgesIgnoringSafeArea(.all) 
+                    //Image("Background2")
+                        Color(.white)
+                        //.resizable()
+                        //.aspectRatio(contentMode: .fill)
+                        //.edgesIgnoringSafeArea(.all) 
                 )
         
         .onAppear {

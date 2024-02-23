@@ -1,53 +1,35 @@
-# Wallet Wizard
+#DashDrop App
+                                    
+#DashDrop is a sophisticated SwiftUI application that facilitates the easy handling of package deliveries. Incorporating features like phone number
+authentication, map-based address search, and user profile management, it offers a seamless experience for both sending and receiving packages.This not only
+simplifies the return process but eliminates the need to visit the drop off and streamlines the return flow for companies. Essentially our app offers
+convenience through a tech driven solution to simplify the return process for all parties involved.
 
-## Overview
-Wallet Wizard is a mobile application designed to simplify financial transactions and account management with a focus on security and user convenience.
-This document outlines the functionalities implemented in the app, especially emphasizing login features, persistent user sessions, settings management,
-and logout capabilities.
+#FEATURES:
+- User Authentication: Secure login and signup through phone numbers, including OTP verification.
+- Address Search: Leveraging MapKit for address searching, allowing users to easily specify pickup or delivery locations.
+- Order Management: Users can request package pickups, specify package details, and track order statuses.
+- User Profile Management: Allows users to manage their profile information and settings.
+- User Tracking Managment: Allows the user to keek track of ther orders.
+- App Reopening: User don't have to enter OTP everytime when the app is opned. App saves users information.
 
-Features
+#USAGE:
+- Upon launching DashDrop, users are presented with a login screen. New users can sign up using their phone number.
 
-Existing Features
-Launch Screen: Displays the app's icon and name on a custom-designed screen.
-Login View: Allows users to log in using their US phone number.
-Country Code Display: Automatically shows "+1" for US numbers.
-Phone Number Input: Users can input their phone number.
-OTP Authentication: Sends a One-Time Password for account verification.
-Error Handling: Informs users of any input errors or verification issues.
-
-New Features
-Persistent User Sessions
-Automatic Login: Users with a stored authentication token bypass the login and verification screens, directly accessing their accounts.
-User Model: Manages user-related data including the authentication token and user info, facilitating tasks such as loading user data, setting usernames,
-and logging out.
-
-Settings Page
-User Information Display: Shows the username (editable) and phone number (non-editable).
-Username Update: Users can edit their name and save changes, which are then reflected across the app.
-
-Logout Functionality
-Session Termination: Allows users to log out, clearing the stored authentication token and resetting the app to its initial state.
-
-Technical Implementation
-Login and Verification.
-Utilizes PhoneNumberKit for phone number formatting and validation.
-Converts phone numbers to E164 format for backend compatibility.
-Implements auto-focus management for OTP entry and auto-verification upon complete OTP entry.
-
-User Model and Data Persistence
-Uses UserDefaults.standard for persistent storage of the authentication token.
-Implements asynchronous data loading with Swift's concurrency features.
-Manages user-related operations through a dedicated user model.
-
-Settings and User Management
-Provides an interface for viewing and editing user information.
-Updates user names asynchronously, reflecting changes immediately in the app.
-Utilizes environment objects and UserDefaults for managing user data and preferences.
-
-Navigation
-Leverages NavigationStack for seamless transitions between the Login, Verification, and Home views.
-Ensures that users cannot navigate back to the loading screen after successful login.
+#KEY SCREENs:
+- Login/Signup View: Enter your phone number to receive an OTP and verify your account.
+- Home View: Request package pickups and view the status of your orders.
+- Address Search: Search for and select addresses for package pickups.
+- Order Details: Specify package details and confirm pickups.
+- User Profile: View and edit your profile information, including phone number and name.
+- StoreSelectionView: lets user pick the store they want the package deleveried to.
+- PackageSelectionView: User can slection the type of page from the given options
+- ImagePicker: Enable user to uploade the image of QR code from their phone.
 
  Developers Information
 - **Name**: [Agam Bhullar] [Harpreet Basota] [Arjun Takhar]
 - **Student ID**: [921637853] [920698495] [922019289]
+
+
+/Users/agambhullar/Downloads/3Idiots.png
+ 

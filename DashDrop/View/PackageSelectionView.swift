@@ -13,6 +13,7 @@ struct PackageSelectionView: View {
     @State private var selectedPackageType: String? = nil
     @State private var quantity: Int = 1
     @State private var navigateToFinalStep = false
+    @State private var showAlert = false
     
     let packageTypes = ["Box", "Soft Poly Bag", "Flat Envelope"]
     
@@ -39,12 +40,17 @@ struct PackageSelectionView: View {
                 }
             
             Button("Final Step") {
-                navigateToFinalStep = true // This will trigger the NavigationLink
+                if self.selectedPackageType != nil {
+                    self.navigateToFinalStep = true
+                } else {
+                    self.showAlert = true
+                }
             }
             .padding()
             .background(Color.blue)
             .foregroundColor(.white)
             .cornerRadius(8)
+            .disabled(self.selectedPackageType == nil)
             
             // Invisible NavigationLink to trigger programmatic navigation
             NavigationLink(destination: FinalStepView(store: store, packageType: selectedPackageType ?? "Box", quantity: quantity, orderDetails: orderDetails), isActive: $navigateToFinalStep) {
@@ -52,6 +58,11 @@ struct PackageSelectionView: View {
             }
 
         }
+        
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Error"), message: Text("Please select a package type."), dismissButton: .default(Text("OK")))
+        }
+        
         .navigationTitle("Package Selection")
         .onAppear {
             orderDetails.store = store

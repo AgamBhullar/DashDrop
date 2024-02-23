@@ -62,7 +62,9 @@ struct ImagePicker: UIViewControllerRepresentable {
         var request = URLRequest(url: URL(string: "https://api.imgur.com/3/image")!)
         request.httpMethod = "POST"
         request.addValue("Client-ID f88110642850d66", forHTTPHeaderField: "Authorization") // Make sure to replace YOUR_CLIENT_ID with your actual Client-ID
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+       // request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("image/jpeg", forHTTPHeaderField: "Content-Type")
+
         //request.httpBody = "{\"image\": \"\(base64Image)\"}".data(using: .utf8)
         request.httpBody = imageData // Directly use binary data
 

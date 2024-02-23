@@ -40,15 +40,16 @@ struct VerificationView: View {
            
             Image("Frame")
                 .resizable()
-                .scaledToFill()
-                .frame(width: 420, height: 180)
+                //.scaledToFill()
+                .frame(width: 400, height: 300)
                 .padding(.bottom, 30)
                 .overlay {
                     Text("Verification Code")
-                        .font(Font.custom("Salsa-Regular", size:40))
+                        .font(Font.custom("Salsa-Regular", size: 40))
+                        .bold()
                         .foregroundColor(Color.white)
                         .padding()
-                        .frame(width: 350, height: 350)
+                        .frame(width: 500, height: 2)
                     }
                 
             Text("Enter the code sent to \(phoneNumber)")

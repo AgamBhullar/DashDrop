@@ -18,50 +18,45 @@ struct FinalStepView: View {
     @State private var image: UIImage?
     @State private var orderCreated = false
     @State private var navigateToConfirmation = false
+    @State private var showAlertForOrderCreation = false
     
     var body: some View {
-            VStack(spacing: 20) {
-                if let image = image {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 200, height: 200)
+        VStack(spacing: 20) {
+            if let image = image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 200, height: 200)
+            }
+            
+            Button("Return QR Code") {
+                showingImagePicker = true
+                uploadQRCode = true
+            }
+            Button("Pre Paid Label") {
+                orderDetails.prePaidLabelChosen.toggle()
+                showingAlert = true
+            }
+            .alert("Please make sure to properly install the label on the package before placing it for delivery.", isPresented: $showingAlert) {
+                Button("OK", role: .cancel) { }
+            }
+            Spacer()
+            Button("Create Order") {
+                if self.orderDetails.prePaidLabelChosen || self.image != nil {
+                    self.sendOrderDetails()
+                    self.navigateToConfirmation = true
+                } else {
+                    self.showAlertForOrderCreation = true
                 }
-                
-                Button("Return QR Code") {
-                    showingImagePicker = true
-                    uploadQRCode = true
-                }
-                Button("Pre Paid Label") {
-                    orderDetails.prePaidLabelChosen.toggle()
-                    showingAlert = true
-                }
-                .alert("Please make sure to properly install the label on the package before placing it for delivery.", isPresented: $showingAlert) {
-                    Button("OK", role: .cancel) { }
-                }
-                Spacer()
-                Button("Create Order") {
-                    if showingImagePicker {
-                        // If showingImagePicker is true, it implies the user intends to upload an image.
-                        // The ImagePicker's onImageUploaded closure should handle setting the qrCodeImageURL
-                        // and then call sendOrderDetails(), ensuring order details are sent after image upload.
-                        
-                        // Trigger the ImagePicker to show.
-                        showingImagePicker = true
-                    } else {
-                        // If there's no need for an image upload, send order details immediately.
-                        sendOrderDetails()
-                    }
-                    
-                    // Navigate to confirmation view or set orderCreated to true if that's handled elsewhere.
-                    orderCreated = true
-                    navigateToConfirmation = true
-                }
+            }
                 
                 .padding()
                 .background(Color.green)
                 .foregroundColor(.white)
                 .cornerRadius(8)
+                .alert(isPresented: $showAlertForOrderCreation) {
+                    Alert(title: Text("Error"), message: Text("Please upload a QR Code or select Pre Paid Label."), dismissButton: .default(Text("OK")))
+                }
                 
                 NavigationLink(destination: OrderConfirmationView(), isActive: $navigateToConfirmation) { EmptyView() }
             }

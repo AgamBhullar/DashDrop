@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct OrderConfirmationView: View {
+    @EnvironmentObject var navigationController: NavigationController
+    
     var body: some View {
         VStack {
             Spacer()
@@ -20,5 +22,9 @@ struct OrderConfirmationView: View {
         }
         .navigationTitle("Order Confirmation")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true) // Hide the back button
+        .navigationBarItems(trailing: Button("Done") {
+            navigationController.shouldShowHomeView = false // Reset the flag
+        })
     }
 }
