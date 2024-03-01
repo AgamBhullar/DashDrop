@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CAB1FC702B88795E001EFF3D /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = CAB1FC6F2B88795E001EFF3D /* README.txt */; };
+		3BA71B2A2B8BF09A00970429 /* OrderInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA71B292B8BF09A00970429 /* OrderInformationView.swift */; };
 		CAEEE20D2B7BF55F007BAEA9 /* DashDropApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEEE20C2B7BF55F007BAEA9 /* DashDropApp.swift */; };
 		CAEEE20F2B7BF55F007BAEA9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEEE20E2B7BF55F007BAEA9 /* ContentView.swift */; };
 		CAEEE2112B7BF560007BAEA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAEEE2102B7BF560007BAEA9 /* Assets.xcassets */; };
@@ -37,7 +37,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		CAB1FC6F2B88795E001EFF3D /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		3BA71B292B8BF09A00970429 /* OrderInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderInformationView.swift; sourceTree = "<group>"; };
 		CAEEE2092B7BF55F007BAEA9 /* DashDrop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DashDrop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAEEE20C2B7BF55F007BAEA9 /* DashDropApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashDropApp.swift; sourceTree = "<group>"; };
 		CAEEE20E2B7BF55F007BAEA9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -81,7 +81,6 @@
 		CAEEE2002B7BF55F007BAEA9 = {
 			isa = PBXGroup;
 			children = (
-				CAB1FC6F2B88795E001EFF3D /* README.txt */,
 				CAEEE20B2B7BF55F007BAEA9 /* DashDrop */,
 				CAEEE20A2B7BF55F007BAEA9 /* Products */,
 			);
@@ -120,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				CAEEE2422B852AEA007BAEA9 /* LoginView.swift */,
+				3BA71B292B8BF09A00970429 /* OrderInformationView.swift */,
 				CAEEE2442B852AF1007BAEA9 /* LaunchScreenView.swift */,
 				CAEEE2462B852AF7007BAEA9 /* LaunchScreenManager.swift */,
 				CAEEE2372B835EF7007BAEA9 /* HomeView.swift */,
@@ -224,7 +224,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CAEEE2142B7BF560007BAEA9 /* Preview Assets.xcassets in Resources */,
-				CAB1FC702B88795E001EFF3D /* README.txt in Resources */,
 				CAEEE2112B7BF560007BAEA9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -250,6 +249,7 @@
 				CAEEE2362B7D7D8B007BAEA9 /* OrderDetails.swift in Sources */,
 				CAEEE22A2B7BF744007BAEA9 /* ClearButton.swift in Sources */,
 				CAEEE2452B852AF1007BAEA9 /* LaunchScreenView.swift in Sources */,
+				3BA71B2A2B8BF09A00970429 /* OrderInformationView.swift in Sources */,
 				CAEEE2382B835EF7007BAEA9 /* HomeView.swift in Sources */,
 				CAEEE24B2B852B36007BAEA9 /* VerificationView.swift in Sources */,
 				CAEEE2512B852B56007BAEA9 /* CustomTextfield2.swift in Sources */,

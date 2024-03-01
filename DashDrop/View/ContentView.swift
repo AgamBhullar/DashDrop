@@ -11,6 +11,7 @@ struct ContentView: View {
                 TextField("Enter Pickup Address", text: $viewModel.searchQuery)
                     .padding()
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .foregroundColor(.black)
                 
                 // Optional: Set a fixed height for the List if needed to improve scrollability
                 List(viewModel.suggestions, id: \.self) { suggestion in
@@ -34,7 +35,12 @@ struct ContentView: View {
                 NavigationLink(destination: StoreSelectionView(orderDetails: orderDetails), isActive: $navigateToStoreSelection) {
                     EmptyView()
                 }
+                //self.navigateToStoreSelection = true
             }
+//            .background {
+//                Image("Background2")
+//                    .overlay(Color("CustomColor1").opacity(0.4))
+//            }
             .navigationTitle("Address Search")
             .gesture(
                 DragGesture().onChanged { _ in
@@ -73,6 +79,14 @@ struct ContentView: View {
             } else {
                 completion("Address not found")
             }
+        }
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            ContentView()
         }
     }
 }

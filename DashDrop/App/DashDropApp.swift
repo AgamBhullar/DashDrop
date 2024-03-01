@@ -7,49 +7,78 @@
 
 import SwiftUI
 import PhoneNumberKit
+import Combine
 
-// Navigation controller to manage navigation state
-class NavigationController: ObservableObject {
-    @Published var shouldShowHomeView = false
+enum AppState {
+    case home
+    case orderConfirmation
+    case loading
+    // Add other states as needed
 }
 
-@main
-struct DashDropApp: App {
-    init() {
-        Api.shared.appId = "QSQEo5xSmENL"
-    }
+class AppData: ObservableObject {
+    //@Published var lastOrderDetails: OrderDetails?
+    @Published var lastOrderDetails: OrderDetails?
 
-    @StateObject var launchScreenManager = LaunchScreenManager()
-    @StateObject var userModel = UserModel()
-    // Initialize the navigation controller
-    @StateObject private var navigationController = NavigationController()
+    //@Published var shouldNavigateToHome = false
+    //@Published var showHomeView = false
+    // @Published var showingOrderConfirmation = false
+    // @Published var currentState: AppState = .home
+}
     
-    var body: some Scene {
-        WindowGroup {
-            Group {
-                if let _ = userModel.authToken {
-                    if userModel.currentUser != nil {
-                        // Provide the navigation controller to the HomeView
-                        HomeView()
-                            .environmentObject(userModel)
-                            .environmentObject(navigationController)
-                    } else {
-                        LoadingView()
-                            .environmentObject(userModel)
-                            .environmentObject(navigationController) //added line
-                        
-                    }
-                } else {
-                    ZStack {
-                        LoginView()
-                            .environmentObject(userModel)
-                        if launchScreenManager.state != .completed {
-                            LaunchScreenView()
+    // Navigation controller to manage navigation state
+    class NavigationController: ObservableObject {
+        @Published var shouldShowHomeView = false
+        
+        
+    }
+    
+    @main
+    struct DashDropApp: App {
+        
+       // @StateObject var orderDetails = OrderDetails()
+        init() {
+            Api.shared.appId = "QSQEo5xSmENL"
+        }
+        
+        @StateObject var appData = AppData()
+        @StateObject var launchScreenManager = LaunchScreenManager()
+        @StateObject var userModel = UserModel()
+        // Initialize the navigation controller
+        @StateObject private var navigationController = NavigationController()
+        
+        
+        var body: some Scene {
+            WindowGroup {
+                Group {
+                    if let _ = userModel.authToken {
+                        if userModel.currentUser != nil {
+                            // Provide the navigation controller to the HomeView
+                            HomeView()
+                                .environmentObject(userModel)
+                                .environmentObject(appData)
+                                .environmentObject(navigationController)
+                           // .environmentObject(orderDetails)
+                        } else {
+                            LoadingView()
+                                .environmentObject(userModel)
+                            
+                                .environmentObject(navigationController) //added line
+                            
+                            
                         }
+                    } else {
+                        ZStack {
+                            LoginView()
+                                .environmentObject(userModel)
+                            if launchScreenManager.state != .completed {
+                                LaunchScreenView()
+                            }
+                        }
+                        .environmentObject(launchScreenManager)
                     }
-                    .environmentObject(launchScreenManager)
                 }
             }
         }
     }
-}
+

@@ -9,7 +9,8 @@ import SwiftUI
 
 struct PackageSelectionView: View {
     var store: String
-    @ObservedObject var orderDetails: OrderDetails 
+    @ObservedObject var orderDetails: OrderDetails
+    //@Environment var orderDetails: OrderDetails
     @State private var selectedPackageType: String? = nil
     @State private var quantity: Int = 1
     @State private var navigateToFinalStep = false
@@ -66,6 +67,13 @@ struct PackageSelectionView: View {
         .navigationTitle("Package Selection")
         .onAppear {
             orderDetails.store = store
+        }
+    }
+}
+struct PackageSelectionView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            PackageSelectionView(store: "UPS", orderDetails: OrderDetails())
         }
     }
 }

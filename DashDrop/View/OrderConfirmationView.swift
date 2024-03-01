@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OrderConfirmationView: View {
     @EnvironmentObject var navigationController: NavigationController
-    
+    var lastOrderDetails: OrderDetails // Assuming OrderDetails is the type of your details
     var body: some View {
         VStack {
             Spacer()
