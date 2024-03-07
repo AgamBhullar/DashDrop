@@ -46,6 +46,10 @@
 		CAEEE20D2B7BF55F007BAEA9 /* DashDropApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEEE20C2B7BF55F007BAEA9 /* DashDropApp.swift */; };
 		CAEEE2112B7BF560007BAEA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAEEE2102B7BF560007BAEA9 /* Assets.xcassets */; };
 		CAEEE2142B7BF560007BAEA9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAEEE2132B7BF560007BAEA9 /* Preview Assets.xcassets */; };
+		E94D4F5A2B9A753300ED3167 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94D4F592B9A753300ED3167 /* HomeViewModel.swift */; };
+		E94D4F5C2B9A757E00ED3167 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94D4F5B2B9A757E00ED3167 /* SettingsView.swift */; };
+		E94D4F5F2B9A76B000ED3167 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94D4F5E2B9A76B000ED3167 /* UserService.swift */; };
+		E94D4F612B9A779B00ED3167 /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94D4F602B9A779B00ED3167 /* SideMenuView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +66,10 @@
 		CAEEE20C2B7BF55F007BAEA9 /* DashDropApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashDropApp.swift; sourceTree = "<group>"; };
 		CAEEE2102B7BF560007BAEA9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CAEEE2132B7BF560007BAEA9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E94D4F592B9A753300ED3167 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		E94D4F5B2B9A757E00ED3167 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		E94D4F5E2B9A76B000ED3167 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		E94D4F602B9A779B00ED3167 /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				3BA71B7D2B93219E00970429 /* AuthViewModel.swift */,
+				E94D4F592B9A753300ED3167 /* HomeViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -135,6 +144,8 @@
 				3BA71B322B92ADE700970429 /* RegistrationView.swift */,
 				3BA71B772B931B0C00970429 /* HomeView.swift */,
 				3BA71B7B2B931D2200970429 /* MapViewRepresentable.swift */,
+				E94D4F5B2B9A757E00ED3167 /* SettingsView.swift */,
+				E94D4F602B9A779B00ED3167 /* SideMenuView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -212,6 +223,7 @@
 		CAEEE20B2B7BF55F007BAEA9 /* DashDrop */ = {
 			isa = PBXGroup;
 			children = (
+				E94D4F5D2B9A769F00ED3167 /* Service */,
 				3BA71B7A2B931C2300970429 /* Managers */,
 				3BA71B792B931C1400970429 /* Extensions */,
 				3BA71B3B2B93141A00970429 /* Models */,
@@ -239,6 +251,14 @@
 				CAEEE20C2B7BF55F007BAEA9 /* DashDropApp.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		E94D4F5D2B9A769F00ED3167 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				E94D4F5E2B9A76B000ED3167 /* UserService.swift */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -346,10 +366,14 @@
 			files = (
 				3BA71B362B92C96B00970429 /* CustomInputField.swift in Sources */,
 				3BA71B332B92ADE700970429 /* RegistrationView.swift in Sources */,
+				E94D4F5C2B9A757E00ED3167 /* SettingsView.swift in Sources */,
+				E94D4F612B9A779B00ED3167 /* SideMenuView.swift in Sources */,
 				3BA71B312B92ADC300970429 /* LoginView.swift in Sources */,
 				3BA71B7E2B93219E00970429 /* AuthViewModel.swift in Sources */,
+				E94D4F5A2B9A753300ED3167 /* HomeViewModel.swift in Sources */,
 				3BA71B802B9325B700970429 /* LocationManager.swift in Sources */,
 				3BA71B782B931B0C00970429 /* HomeView.swift in Sources */,
+				E94D4F5F2B9A76B000ED3167 /* UserService.swift in Sources */,
 				3BA71B7C2B931D2200970429 /* MapViewRepresentable.swift in Sources */,
 				CAEEE20D2B7BF55F007BAEA9 /* DashDropApp.swift in Sources */,
 				3BA71B852B932D7F00970429 /* LocationSearchActivationView.swift in Sources */,
