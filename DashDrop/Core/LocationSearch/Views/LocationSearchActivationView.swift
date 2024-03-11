@@ -2,17 +2,35 @@
 //  LocationSearchActivationView.swift
 //  DashDrop
 //
-//  Created by Harpreet Basota on 3/2/24.
+//  Created by Agam Bhullar on 3/1/24.
 //
 
 import SwiftUI
 
 struct LocationSearchActivationView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            Rectangle()
+                .fill(Color.red)
+                .frame(width: 8, height: 8)
+                .padding(.horizontal)
+            
+            Text("Enter Delivery Address")
+                .foregroundColor(Color(.darkGray))
+            
+            Spacer()
+        }
+        .frame(width: UIScreen.main.bounds.width - 64, height: 50)
+        .background(
+            Rectangle()
+                .fill(Color.white)
+                .shadow(color: .black, radius: 6)
+        )
     }
 }
 
-#Preview {
-    LocationSearchActivationView()
+struct LocationSearchActivationView_Previews: PreviewProvider {
+    static var previews: some View {
+        LocationSearchActivationView()
+    }
 }

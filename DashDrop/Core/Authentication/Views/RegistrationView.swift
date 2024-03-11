@@ -2,7 +2,7 @@
 //  RegistrationView.swift
 //  DashDrop
 //
-//  Created by Harpreet Basota on 3/1/24.
+//  Created by Agam Bhullar on 3/2/24.
 //
 
 import SwiftUI
@@ -11,13 +11,17 @@ struct RegistrationView: View {
     @State private var fullname = ""
     @State private var email = ""
     @State private var password = ""
+    @State private var showingSuccessAlert = false
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var viewModel: AuthViewModel
     
     var body: some View {
-        ZStack{
-            VStack(alignment: .leading, spacing: 20){
-                Button{
+        ZStack {
+            Color(.black)
+                .ignoresSafeArea()
+            
+            VStack(alignment: .leading, spacing: 20) {
+                Button {
                     dismiss()
                 } label: {
                     Image(systemName: "arrow.left")
@@ -32,44 +36,50 @@ struct RegistrationView: View {
                     .multilineTextAlignment(.leading)
                     .frame(width: 250)
                 
+                
                 Spacer()
                 
-                VStack{
-                    VStack(spacing: 56){
+                VStack {
+                    VStack(spacing: 56) {
                         CustomInputField(text: $fullname, title: "Full Name", placeholder: "Enter your name")
                         
-                        CustomInputField(text: $email, title: "Email", placeholder: "Enter your email")
+                        CustomInputField(text: $email, title: "Email Address", placeholder: "name@example.com")
+                            .autocapitalization(.none)
                         
-                        CustomInputField(text: $password, title: " Create Password", placeholder: "Enter your password", isSecuredField: true)
+                        CustomInputField(text: $password, title: "Create Password", placeholder: "Enter your password", isSecureField: true)
                     }
                     .padding(.leading)
                     
                     Spacer()
-                    Button{
-                        viewModel.registerUser(withEmail: email, password: password, fullname: fullname)
+                    
+                    Button {
+                        viewModel.registerUser(withEmail: email, 
+                                               password: password,
+                                               fullname: fullname) {
+                            self.showingSuccessAlert = true
+                        }
                     } label: {
-                        HStack{
+                        HStack {
                             Text("SIGN UP")
-                                .foregroundColor(.white)
-                            Image(systemName: "arrow.right")
-                                .foregroundColor(.white)
+                                .foregroundColor(.black)
                             
+                            Image(systemName: "arrow.right")
+                                .foregroundColor(.black)
                         }
                         .frame(width: UIScreen.main.bounds.width - 32, height: 50)
                     }
-                    
-                    .background(Color.red)
+                    .background(Color("CustomColor1"))
                     .cornerRadius(10)
                     
                     Spacer()
                 }
-                
             }
+            .foregroundColor(.white)
         }
     }
 }
 
-struct RegiostrationView_Previews: PreviewProvider {
+struct RegistrationView_Previews: PreviewProvider {
     static var previews: some View {
         RegistrationView()
     }

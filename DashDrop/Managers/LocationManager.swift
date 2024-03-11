@@ -2,14 +2,15 @@
 //  LocationManager.swift
 //  DashDrop
 //
-//  Created by Harpreet Basota on 3/2/24.
+//  Created by Agam Bhullar on 3/1/24.
 //
 
 import CoreLocation
 
 class LocationManager: NSObject, ObservableObject {
-    
     private let locationManager = CLLocationManager()
+    static let shared = LocationManager()
+    @Published var userLocation: CLLocationCoordinate2D?
     
     override init() {
         super.init()
@@ -20,9 +21,11 @@ class LocationManager: NSObject, ObservableObject {
     }
 }
 
-extension LocationManager: CLLocationManagerDelegate{
-    func locationManager(_ manager: CLLocationManager,  didUpdateLocations locations: [CLLocation]) {
-        guard !locations.isEmpty else {return}
+extension LocationManager: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations:
+        [CLLocation]) {
+        guard let location = locations.first else { return }
+        self.userLocation = location.coordinate
         locationManager.stopUpdatingLocation()
     }
 }

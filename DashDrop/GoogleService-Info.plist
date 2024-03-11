@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyBE6ggL_UP67TVcjyb8vTMem6pC9MZBRtw</string>
+	<string>AIzaSyB8vZsio7Qk4R-oHPSYD_2_JuBtaeL824U</string>
 	<key>GCM_SENDER_ID</key>
-	<string>646907409308</string>
+	<string>104183650492</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>C--.DashDrop</string>
 	<key>PROJECT_ID</key>
-	<string>dashdrop-6d36e</string>
+	<string>dashdrop-4506f</string>
 	<key>STORAGE_BUCKET</key>
-	<string>dashdrop-6d36e.appspot.com</string>
+	<string>dashdrop-4506f.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:646907409308:ios:4707239472e84831e60e59</string>
+	<string>1:104183650492:ios:f42f33d872f38d9afb58b9</string>
 </dict>
 </plist>
