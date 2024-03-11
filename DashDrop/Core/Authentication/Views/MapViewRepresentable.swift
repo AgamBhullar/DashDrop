@@ -19,7 +19,7 @@ struct MapViewRepresentable: UIViewRepresentable {
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
         
-        return mapView
+        return mapView 
         
     }
     
