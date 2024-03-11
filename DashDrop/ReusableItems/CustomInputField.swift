@@ -2,42 +2,44 @@
 //  CustomInputField.swift
 //  DashDrop
 //
-//  Created by Harpreet Basota on 3/1/24.
+//  Created by Agam Bhullar on 3/2/24.
 //
 
 import SwiftUI
 
 struct CustomInputField: View {
     @Binding var text: String
-    let title : String
+    let title: String
     let placeholder: String
-    var isSecuredField = false
+    var isSecureField = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12){
+        VStack(alignment: .leading, spacing: 12) {
             //title
             Text(title)
-                .foregroundColor(.black)
+                .foregroundColor(.white)
                 .fontWeight(.semibold)
                 .font(.footnote)
             
-            // text field
+            //text field
             
-            if isSecuredField{
+            if isSecureField {
                 SecureField(placeholder, text: $text)
-            } else{
+            } else {
                 TextField(placeholder, text: $text)
-                    .foregroundColor(.black)
+                    .foregroundColor(.white)
             }
             
             //divider
             Rectangle()
-                .foregroundColor(Color.black)
+                .foregroundColor(Color(.init(white: 1, alpha: 0.3)))
                 .frame(width: UIScreen.main.bounds.width - 32, height: 0.7)
         }
     }
 }
 
-#Preview {
-    CustomInputField(text: .constant(""), title: "Email", placeholder: "name@example.com")
+struct CustomInputField_Previews: PreviewProvider {
+    static var previews: some View {
+        CustomInputField(text: .constant(""), title: "Email", placeholder: "name@example.com")
+    }
 }
