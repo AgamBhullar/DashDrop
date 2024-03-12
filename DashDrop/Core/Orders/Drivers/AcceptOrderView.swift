@@ -21,7 +21,7 @@ struct AcceptOrderView: View {
                                     longitudeDelta: 0.025)
         self.region = MKCoordinateRegion(center: center, span: span)
         self.order = order
-        self.annotationItem = DashDropLocation(title: order.pickupLocationName, coordinate: order.pickupLocation.toCoordinate())
+        self.annotationItem = DashDropLocation(title: order.pickupLocationName, coordinate: order.customerLocation.toCoordinate())
     }
     
     var body: some View {
@@ -205,3 +205,5 @@ struct AcceptOrderView_Previews: PreviewProvider {
         AcceptOrderView(order: dev.mockOrder)
     }
 }
+
+

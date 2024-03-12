@@ -11,6 +11,8 @@ struct OrderRequestView: View {
     //@State private var selectedStoreType: StoreType = .ups
     @State private var selectedPackageType: PackageType = .box
     @State private var selectedQRCodeImage: UIImage?
+    @State private var isPrepaidOptionSelected = false
+    @State private var isPackageTypeSelected = false
     @EnvironmentObject var homeViewModel: HomeViewModel
     
     var body: some View {
@@ -105,6 +107,8 @@ struct OrderRequestView: View {
                         .onTapGesture {
                             withAnimation(.spring()) {
                                 selectedPackageType = type
+                                isPackageTypeSelected = true
+                                print("DEBUG: Selected package type: \(type)")
                             }
                         }
                     }
@@ -123,7 +127,9 @@ struct OrderRequestView: View {
                     selectedImage: $selectedQRCodeImage,
                     didConfirmSelection: { image in
                         self.selectedQRCodeImage = image
-                    }
+                        // You might want to set isPrepaidOptionSelected to true here if needed
+                    },
+                    isSelectionMade: $isPrepaidOptionSelected // This assumes you have a State variable tracking this in OrderRequestView
                 ),
                 label: {
                     HStack(spacing: 12) {
@@ -155,14 +161,20 @@ struct OrderRequestView: View {
                 Text("CONFIRM ORDER")
                     .fontWeight(.bold)
                     .frame(width: UIScreen.main.bounds.width - 32, height: 50)
-                    .background(.red)
+                    .background(isConfirmOrderEnabled() ? Color.red : Color.gray)
                     .cornerRadius(10)
                     .foregroundColor(.white)
             }
+            .disabled(!isConfirmOrderEnabled())
         }
         .padding(.bottom, 24)
         .background(Color.theme.backgroundColor)
         .cornerRadius(16)
+    }
+    
+    private func isConfirmOrderEnabled() -> Bool {
+        return isPackageTypeSelected && isPrepaidOptionSelected
+        //return selectedQRCodeImage != nil
     }
 }
 
