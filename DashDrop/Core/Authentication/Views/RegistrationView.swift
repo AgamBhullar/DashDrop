@@ -55,9 +55,8 @@ struct RegistrationView: View {
                     Button {
                         viewModel.registerUser(withEmail: email, 
                                                password: password,
-                                               fullname: fullname) {
-                            self.showingSuccessAlert = true
-                        }
+                                               fullname: fullname)
+                            //self.showingSuccessAlert = true
                     } label: {
                         HStack {
                             Text("SIGN UP")

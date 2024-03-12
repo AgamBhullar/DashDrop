@@ -7,12 +7,14 @@
 
 import SwiftUI
 
-struct PickupPassengerView: View {
+struct PickupPackageView: View {
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
-#Preview {
-    PickupPassengerView()
+struct PickupPackageView_Previews: PreviewProvider {
+    static var previews: some View {
+        PickupPackageView()
+    }
 }

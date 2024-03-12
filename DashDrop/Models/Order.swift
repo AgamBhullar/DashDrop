@@ -32,6 +32,8 @@ struct Order: Identifiable, Codable {
     var travelTimeToCustomer: Int
     var state: OrderState
     var qrcodeImageUrl: String? 
+    let selectedLabelOption: String
+    //var selectedPackageType: String
     
     var id: String {
         return orderId ?? ""

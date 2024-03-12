@@ -18,9 +18,9 @@ class HomeViewModel: NSObject, ObservableObject {
     @Published var drivers = [User]()
     @Published var order: Order?
     private let service = UserService.shared
-    //var currentUser: User?
+    var currentUser: User?
     private var cancellables = Set<AnyCancellable>()
-    private var currentUser: User?
+    //private var currentUser: User?
     
     //Location search properties
     @Published var results = [MKLocalSearchCompletion]()
@@ -53,8 +53,8 @@ class HomeViewModel: NSObject, ObservableObject {
     func fetchUser() {
         service.$user
             .sink { user in
-                self.currentUser = user
                 guard let user = user else { return }
+                self.currentUser = user
                 //self.currentUser = user
                 
                 if user.accountType == .customer {
@@ -127,6 +127,10 @@ extension HomeViewModel {
             guard let self = self, let placemark = placemark else { return }
             let tripCost = self.computeRidePrice(forType: .box)
             
+            // Determine the pickup location name and address from the placemark
+            let pickupLocationName = placemark.name ?? "Current Location"
+            let pickupLocationAddress = self.addressFromPlacemark(placemark)
+            
             // Check if there is an image to be uploaded
             if let selectedImage = self.selectedQRCodeImage {
                 // Upload image then get the URL
@@ -137,18 +141,19 @@ extension HomeViewModel {
                         driverUid: driver.uid,
                         customerName: currentUser.fullname,
                         driverName: driver.fullname,
-                        customerLocation: currentUser.coordinates,
+                        customerLocation: GeoPoint(latitude: currentLocation.latitude, longitude: currentLocation.longitude), // Use current location for customerLocation
                         driverLocation: driver.coordinates,
-                        pickupLocationName: placemark.name ?? "Current Location",
+                        pickupLocationName: pickupLocationName,
                         dropoffLocationName: dropoffLocation.title,
-                        pickupLocationAddress: self.addressFromPlacemark(placemark),
-                        pickupLocation: currentUser.coordinates,
+                        pickupLocationAddress: pickupLocationAddress,
+                        pickupLocation: pickupGeoPoint, // Use GeoPoint created from current location
                         dropoffLocation: dropoffGeoPoint,
                         tripCost: tripCost,
                         distanceToCustomer: 0,
                         travelTimeToCustomer: 0,
                         state: .requested,
-                        qrcodeImageUrl: imageUrl // Add this line to include the image URL
+                        qrcodeImageUrl: imageUrl, // Include the image URL if available
+                        selectedLabelOption: "The customer uploaded an image of the QR code"
                     )
                     
                     // Now upload order data including the image URL
@@ -162,26 +167,27 @@ extension HomeViewModel {
                     driverUid: driver.uid,
                     customerName: currentUser.fullname,
                     driverName: driver.fullname,
-                    customerLocation: currentUser.coordinates,
+                    customerLocation: GeoPoint(latitude: currentLocation.latitude, longitude: currentLocation.longitude), // Use current location for customerLocation
                     driverLocation: driver.coordinates,
-                    pickupLocationName: placemark.name ?? "Current Location",
+                    pickupLocationName: pickupLocationName,
                     dropoffLocationName: dropoffLocation.title,
-                    pickupLocationAddress: self.addressFromPlacemark(placemark),
-                    pickupLocation: currentUser.coordinates,
+                    pickupLocationAddress: pickupLocationAddress,
+                    pickupLocation: pickupGeoPoint, // Use GeoPoint created from current location
                     dropoffLocation: dropoffGeoPoint,
                     tripCost: tripCost,
                     distanceToCustomer: 0,
                     travelTimeToCustomer: 0,
-                    state: .requested
+                    state: .requested,
+                    selectedLabelOption: "The customer selected the prepaid label option."
                 )
                 
                 // Now upload order data without the image URL
                 print("DEBUG: Trip is \(order)")
                 self.uploadOrderData(order)
-               
             }
         }
     }
+
 
     private func uploadOrderData(_ order: Order) {
         guard let encodedOrder = try? Firestore.Encoder().encode(order) else { return }

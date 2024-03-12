@@ -14,6 +14,7 @@ struct PrepaidLabelView: View {
     @State private var selectedPrepaidOption: SelectedPrepaidOption = .qrcode
     @Environment(\.presentationMode) var presentationMode
     var didConfirmSelection: ((UIImage?) -> Void)?
+    @Binding var isSelectionMade: Bool
 
     var body: some View {
         VStack {
@@ -96,9 +97,7 @@ struct PrepaidLabelView: View {
             }
             
             Spacer()
-            
-            // Only enable the button if an option has been selected
-            if selectedPrepaidOption != nil {
+    
                 Button(action: {
                     // Handle the confirmation action
                     confirmSelectionAction()
@@ -108,11 +107,11 @@ struct PrepaidLabelView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(isConfirmSelectionEnabled() ? Color.blue : Color.gray) 
                         .cornerRadius(10)
                 }
+                .disabled(!isConfirmSelectionEnabled())
                 .padding()
-            }
         }
         .sheet(isPresented: $showImagePicker, 
                onDismiss: loadImage) {
@@ -123,6 +122,20 @@ struct PrepaidLabelView: View {
     func loadImage() {
         guard let selectedImage = selectedImage else { return }
         qrcodeImage = Image(uiImage: selectedImage)
+        isSelectionMade = true
+    }
+    
+    // Helper function to determine if the confirm selection button should be enabled
+    private func isConfirmSelectionEnabled() -> Bool {
+        if selectedPrepaidOption == .qrcode {
+            // Enable button if QR code option is selected and an image is picked
+            return selectedImage != nil
+        } else if selectedPrepaidOption == .selectedLabel {
+            // Enable button if the label option is selected
+            return true
+        }
+        // Disable button by default if no option is selected
+        return false
     }
 
     private func performActionForSelectedOption(_ option: SelectedPrepaidOption) {
@@ -140,6 +153,7 @@ struct PrepaidLabelView: View {
     private func confirmSelectionAction() {
         // Implement action for confirm selection button
         didConfirmSelection?(selectedImage)
+        isSelectionMade = true
         presentationMode.wrappedValue.dismiss()
     }
 }
@@ -152,8 +166,8 @@ struct PrepaidLabelView: View {
 //    }
 //}
 
-struct PrepaidLabelView_Previews: PreviewProvider {
-    static var previews: some View {
-        PrepaidLabelView(selectedImage: .constant(nil))
-    }
-}
+//struct PrepaidLabelView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PrepaidLabelView(selectedImage: .constant(nil))
+//    }
+//}

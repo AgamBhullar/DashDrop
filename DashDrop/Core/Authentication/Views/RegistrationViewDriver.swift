@@ -60,12 +60,11 @@ struct RegistrationViewDriver: View {
                     Spacer()
                     
                     Button {
-                        viewModel.registerUser(withEmail: email,
-                                               password: password, fullname: fullname,
-                                               accountType: .driver) {
+                        viewModel.registerDriver(withEmail: email,
+                                               password: password, fullname: fullname)
                             // This closure is called after successful registration.
                             self.showingSuccessAlert = true
-                        }
+                        
                     } label: {
                         HStack {
                             Text("SIGN UP")

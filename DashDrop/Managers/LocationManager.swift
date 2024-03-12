@@ -26,6 +26,6 @@ extension LocationManager: CLLocationManagerDelegate {
         [CLLocation]) {
         guard let location = locations.first else { return }
         self.userLocation = location.coordinate
-        locationManager.stopUpdatingLocation()
+        //locationManager.stopUpdatingLocation()
     }
 }

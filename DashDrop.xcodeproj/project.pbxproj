@@ -71,6 +71,7 @@
 		CAC116B72B96635700690E6A /* SideMenuOptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC116B62B96635700690E6A /* SideMenuOptionViewModel.swift */; };
 		CAC116B92B96652800690E6A /* SideMenuOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC116B82B96652800690E6A /* SideMenuOptionView.swift */; };
 		CAC116BC2B96BA5700690E6A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC116BB2B96BA5700690E6A /* SettingsView.swift */; };
+		CAE43F2F2B9FDC6A0007DA21 /* PickupPackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43F2E2B9FDC6A0007DA21 /* PickupPackageView.swift */; };
 		CAFCEC532B97A111005F67DA /* SavedLocationRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAFCEC522B97A111005F67DA /* SavedLocationRowView.swift */; };
 		CAFCEC552B97A5EC005F67DA /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAFCEC542B97A5EC005F67DA /* SettingsRowView.swift */; };
 		CAFCEC572B97B8FB005F67DA /* SavedModelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAFCEC562B97B8FB005F67DA /* SavedModelViewModel.swift */; };
@@ -124,6 +125,7 @@
 		CAC116B62B96635700690E6A /* SideMenuOptionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuOptionViewModel.swift; sourceTree = "<group>"; };
 		CAC116B82B96652800690E6A /* SideMenuOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuOptionView.swift; sourceTree = "<group>"; };
 		CAC116BB2B96BA5700690E6A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		CAE43F2E2B9FDC6A0007DA21 /* PickupPackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupPackageView.swift; sourceTree = "<group>"; };
 		CAFCEC522B97A111005F67DA /* SavedLocationRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedLocationRowView.swift; sourceTree = "<group>"; };
 		CAFCEC542B97A5EC005F67DA /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
 		CAFCEC562B97B8FB005F67DA /* SavedModelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedModelViewModel.swift; sourceTree = "<group>"; };
@@ -341,10 +343,8 @@
 		CAC1165D2B931EF700690E6A /* Orders */ = {
 			isa = PBXGroup;
 			children = (
-				CAC1165E2B931F2D00690E6A /* OrderRequestView.swift */,
-				CAFCEC672B992193005F67DA /* AcceptOrderView.swift */,
-				CA0E5DBD2B9A8C9D0013AA83 /* OrderLoadingView.swift */,
-				CA0E5DBF2B9A8D7E0013AA83 /* OrderAcceptedView.swift */,
+				CAE43F2D2B9FDC390007DA21 /* Drivers */,
+				CAE43F2C2B9FDC370007DA21 /* Customers */,
 			);
 			path = Orders;
 			sourceTree = "<group>";
@@ -438,6 +438,25 @@
 				CAFCEC562B97B8FB005F67DA /* SavedModelViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		CAE43F2C2B9FDC370007DA21 /* Customers */ = {
+			isa = PBXGroup;
+			children = (
+				CAC1165E2B931F2D00690E6A /* OrderRequestView.swift */,
+				CA0E5DBD2B9A8C9D0013AA83 /* OrderLoadingView.swift */,
+				CA0E5DBF2B9A8D7E0013AA83 /* OrderAcceptedView.swift */,
+			);
+			path = Customers;
+			sourceTree = "<group>";
+		};
+		CAE43F2D2B9FDC390007DA21 /* Drivers */ = {
+			isa = PBXGroup;
+			children = (
+				CAFCEC672B992193005F67DA /* AcceptOrderView.swift */,
+				CAE43F2E2B9FDC6A0007DA21 /* PickupPackageView.swift */,
+			);
+			path = Drivers;
 			sourceTree = "<group>";
 		};
 		CAFCEC642B9914DE005F67DA /* Services */ = {
@@ -560,6 +579,7 @@
 				CAC116702B93CD6E00690E6A /* RegistrationView.swift in Sources */,
 				CAFCEC5D2B97D7D4005F67DA /* SavedLocation.swift in Sources */,
 				CAC116B72B96635700690E6A /* SideMenuOptionViewModel.swift in Sources */,
+				CAE43F2F2B9FDC6A0007DA21 /* PickupPackageView.swift in Sources */,
 				CAC1165C2B9315B500690E6A /* MapViewState.swift in Sources */,
 				CAC116732B93D71100690E6A /* CustomInputField.swift in Sources */,
 				CA0E5E0D2B9D2C850013AA83 /* RegistrationViewDriver.swift in Sources */,
