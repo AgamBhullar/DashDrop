@@ -6,6 +6,7 @@
 //
 
 import Firebase
+import FirebaseFirestoreSwift
 
 class UserService: ObservableObject {
     static let shared = UserService()

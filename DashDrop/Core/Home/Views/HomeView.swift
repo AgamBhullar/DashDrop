@@ -79,11 +79,20 @@ extension HomeView {
                             .transition(.move(edge: .bottom))
                     } else if mapState == .orderRejected {
                         // show order rejected view
+                    } else if mapState == .orderDelivered {
+                        OrderDeliveredView()
                     }
                 } else {
                     if let order = homeViewModel.order {
-                        AcceptOrderView(order: order)
-                            .transition(.move(edge: .bottom))
+                        if mapState == .orderRequested {
+                            AcceptOrderView(order: order)
+                                .transition(.move(edge: .bottom))
+                        } else if mapState == .orderAccepted {
+                            PickupPackageView(order: order)
+                                .transition(.move(edge: .bottom))
+                        } else if mapState == .orderDelivered {
+                            DriverDeliveredView(order: order)
+                        }
                     }
                 }
             }
@@ -110,15 +119,17 @@ extension HomeView {
                     self.mapState = .orderRejected
                 case .accepted:
                     self.mapState = .orderAccepted
+                case .delivered:
+                    self.mapState = .orderDelivered
                 }
             }
         }
     }
 }
 
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView()
-            .environmentObject(AuthViewModel())
-    }
-}
+//struct HomeView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        HomeView()
+//            .environmentObject(AuthViewModel())
+//    }
+//}

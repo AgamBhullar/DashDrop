@@ -18,8 +18,9 @@ class HomeViewModel: NSObject, ObservableObject {
     @Published var drivers = [User]()
     @Published var order: Order?
     private let service = UserService.shared
-    var currentUser: User?
+    @Published var currentUser: User?
     private var cancellables = Set<AnyCancellable>()
+    @Published var selectedPackageType: PackageType?
     //private var currentUser: User?
     
     //Location search properties
@@ -61,7 +62,7 @@ class HomeViewModel: NSObject, ObservableObject {
                     self.fetchDrivers()
                     self.addOrderObserverForCustomer()
                 } else {
-                    self.fetchOrders()
+                    self.addOrderObserverForDriver()
                 }
             }
             .store(in: &cancellables)
@@ -116,7 +117,8 @@ extension HomeViewModel {
         guard let driver = drivers.first,
               let currentUser = currentUser,
               let dropoffLocation = selectedDashDropLocation,
-              let currentLocation = LocationManager.shared.userLocation else { return }
+              let currentLocation = LocationManager.shared.userLocation,
+              let selectedPackage = selectedPackageType else { return }
 
         let dropoffGeoPoint = GeoPoint(latitude: dropoffLocation.coordinate.latitude, longitude: dropoffLocation.coordinate.longitude)
         let pickupGeoPoint = GeoPoint(latitude: currentLocation.latitude, longitude: currentLocation.longitude)
@@ -136,6 +138,7 @@ extension HomeViewModel {
                 // Upload image then get the URL
                 ImageUploader.uploadImage(image: selectedImage) { imageUrl in
                     // Create the Order with the image URL
+                    
                     let order = Order(
                         customerUid: currentUser.uid,
                         driverUid: driver.uid,
@@ -153,7 +156,8 @@ extension HomeViewModel {
                         travelTimeToCustomer: 0,
                         state: .requested,
                         qrcodeImageUrl: imageUrl, // Include the image URL if available
-                        selectedLabelOption: "The customer uploaded an image of the QR code"
+                        selectedLabelOption: "The customer uploaded an image of the QR code",
+                        packageType: selectedPackage.description
                     )
                     
                     // Now upload order data including the image URL
@@ -178,7 +182,8 @@ extension HomeViewModel {
                     distanceToCustomer: 0,
                     travelTimeToCustomer: 0,
                     state: .requested,
-                    selectedLabelOption: "The customer selected the prepaid label option."
+                    selectedLabelOption: "The customer selected the prepaid label option.",
+                    packageType: selectedPackage.description
                 )
                 
                 // Now upload order data without the image URL
@@ -200,15 +205,17 @@ extension HomeViewModel {
 // MARK: - Driver API
 
 extension HomeViewModel {
-    func fetchOrders() {
-        guard let currentUser = currentUser else { return }
+    func addOrderObserverForDriver() {
+        guard let currentUser = currentUser, currentUser.accountType == .driver else { return }
         
         Firestore.firestore().collection("orders")
             .whereField("driverUid", isEqualTo: currentUser.uid)
-            .getDocuments { snapshot, _ in
-                guard let documents = snapshot?.documents, let document = documents.first else { return }
-                guard let order = try? document.data(as: Order.self) else { return }
+            .addSnapshotListener { snapshot, _ in
+                guard let change = snapshot?.documentChanges.first,
+                        change.type == .added
+                        || change.type == .modified else { return }
                 
+                guard let order = try? change.document.data(as: Order.self) else { return }
                 self.order = order
                 
                 self.getDestinationRoute(from: order.driverLocation.toCoordinate(),
@@ -217,7 +224,47 @@ extension HomeViewModel {
                     self.order?.travelTimeToCustomer = Int(route.expectedTravelTime / 60)
                     self.order?.distanceToCustomer = route.distance
                 }
+        }
+    }
+    
+//    func fetchOrders() {
+//        guard let currentUser = currentUser else { return }
+//        
+//        Firestore.firestore().collection("orders")
+//            .whereField("driverUid", isEqualTo: currentUser.uid)
+//            .getDocuments { snapshot, _ in
+//                guard let documents = snapshot?.documents, let document = documents.first else { return }
+//                guard let order = try? document.data(as: Order.self) else { return }
+//                
+//                self.order = order
+//                
+//                self.getDestinationRoute(from: order.driverLocation.toCoordinate(),
+//                                         to: order.pickupLocation.toCoordinate()) { route in
+//                    
+//                    self.order?.travelTimeToCustomer = Int(route.expectedTravelTime / 60)
+//                    self.order?.distanceToCustomer = route.distance
+//                }
+//            }
+//    }
+    
+    func uploadReceiptImage(forOrder orderID: String, image: UIImage) {
+        // First, upload the image
+        ImageUploader.uploadImage(image: image) { imageUrl in
+            // Define a new document in the 'receipts' collection with the same orderID
+            let receiptRef = Firestore.firestore().collection("receipts").document(orderID)
+            
+            // Prepare the data to be saved
+            let receiptData = ["receiptImageUrl": imageUrl, "orderID": orderID, "uploadDate": Timestamp()]
+            
+            // Set the data for the receipt document
+            receiptRef.setData(receiptData) { error in
+                if let error = error {
+                    print("DEBUG: Failed to save receipt data: \(error.localizedDescription)")
+                } else {
+                    print("DEBUG: Receipt data saved successfully.")
+                }
             }
+        }
     }
     
     func rejectOrder() {
@@ -226,6 +273,10 @@ extension HomeViewModel {
     
     func acceptOrder() {
         updateOrderState(state: .accepted)
+    }
+    
+    func deliveredOrder() {
+        updateOrderState(state: .delivered)
     }
     
     private func updateOrderState(state: OrderState) {

@@ -156,6 +156,7 @@ struct OrderRequestView: View {
             //confirm order button
             Button {
                 homeViewModel.selectedQRCodeImage = self.selectedQRCodeImage
+                homeViewModel.selectedPackageType = self.selectedPackageType
                 homeViewModel.requestOrder()
             } label: {
                 Text("CONFIRM ORDER")

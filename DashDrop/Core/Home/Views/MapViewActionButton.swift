@@ -40,7 +40,8 @@ struct MapViewActionButton: View {
                 .polylineAdded,
                 .orderRejected,
                 .orderAccepted,
-                .orderRequested:
+                .orderRequested,
+                .orderDelivered:
             mapState = .noInput
             viewModel.selectedDashDropLocation = nil
         }

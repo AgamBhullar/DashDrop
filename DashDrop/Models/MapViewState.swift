@@ -15,4 +15,5 @@ enum MapViewState {
     case orderRequested
     case orderRejected
     case orderAccepted
+    case orderDelivered
 }

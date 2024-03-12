@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SideMenuView: View {
+    @EnvironmentObject var viewModel: AuthViewModel
     
     private let user: User
     
@@ -16,16 +17,19 @@ struct SideMenuView: View {
     }
     
     var body: some View {
+        if let user = viewModel.currentUser {
             VStack(spacing: 40) {
                 // header view
                 VStack(alignment: .leading, spacing: 32) {
                     //user info
                     HStack {
-                        Image("ProfilePhoto")
-                            .resizable()
-                            .scaledToFill()
+                        Text(user.initials)
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .frame(width: 72, height: 72)
+                            .background(Color(.systemGray3))
                             .clipShape(Circle())
-                            .frame(width: 64, height: 64)
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text(user.fullname)
@@ -91,6 +95,7 @@ struct SideMenuView: View {
                 Spacer()
             }
             .padding(.top, 32)
+        }
     }
 }
 

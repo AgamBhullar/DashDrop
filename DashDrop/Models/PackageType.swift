@@ -49,3 +49,14 @@ enum PackageType: Int, CaseIterable, Identifiable {
         }
     }
 }
+
+extension PackageType {
+    init?(description: String) {
+        switch description {
+        case "Box": self = .box
+        case "Soft Poly Bag": self = .softPolyBag
+        case "Flat Envelope": self = .flatEnvelope
+        default: return nil
+        }
+    }
+}

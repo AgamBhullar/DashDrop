@@ -16,72 +16,76 @@ struct SettingsView: View {
     }
     
     var body: some View {
-        VStack {
-            List {
-                Section {
-                    //user info header
-                    HStack {
-                        Image("ProfilePhoto")
-                            .resizable()
-                            .scaledToFill()
-                            .clipShape(Circle())
-                            .frame(width: 64, height: 64)
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(user.fullname)
-                                .font(.system(size: 16, weight: .semibold))
+        if let user = viewModel.currentUser {
+            VStack {
+                List {
+                    Section {
+                        //user info header
+                        HStack {
+                            Text(user.initials)
+                                .font(.title)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .frame(width: 72, height: 72)
+                                .background(Color(.systemGray3))
+                                .clipShape(Circle())
                             
-                            Text(user.email)
-                                .font(.system(size: 14))
-                                .accentColor(Color.theme.primaryTextColor)
-                                .opacity(0.77)
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(user.fullname)
+                                    .font(.system(size: 16, weight: .semibold))
+                                
+                                Text(user.email)
+                                    .font(.system(size: 14))
+                                    .accentColor(Color.theme.primaryTextColor)
+                                    .opacity(0.77)
+                            }
+                            
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .imageScale(.small)
+                                .font(.title2)
+                                .foregroundColor(.gray)
                         }
+                        .padding(8)
+                    }
+                    
+                    Section("Favorites") {
+                        ForEach(SavedLocationViewModel.allCases) { viewModel in
+                            NavigationLink {
+                                SavedLocationSearchView(config: viewModel)
+                            } label: {
+                                SavedLocationRowView(viewModel: viewModel, user: user)
+                            }
+                        }
+                    }
+                    
+                    Section("Settings") {
+                        SettingsRowView(imageName: "bell.circle.fill",
+                                        title: "Notifications",
+                                        tintColor: Color(.systemOrange))
                         
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .imageScale(.small)
-                            .font(.title2)
-                            .foregroundColor(.gray)
+                        SettingsRowView(imageName: "creditcard.circle.fill",
+                                        title: "Payment Methods",
+                                        tintColor: Color(.systemBlue))
                     }
-                    .padding(8)
-                }
-                
-                Section("Favorites") {
-                    ForEach(SavedLocationViewModel.allCases) { viewModel in
-                        NavigationLink {
-                            SavedLocationSearchView(config: viewModel)
-                        } label: {
-                            SavedLocationRowView(viewModel: viewModel, user: user)
+                    
+                    Section("Account") {
+                        SettingsRowView(imageName: "dollarsign.square.fill",
+                                        title: "Become a driver",
+                                        tintColor: Color(.systemGreen))
+                        
+                        SettingsRowView(imageName: "arrow.left.square.fill",
+                                        title: "Sign out",
+                                        tintColor: Color(.systemRed))
+                        .onTapGesture {
+                            viewModel.signout()
                         }
-                    }
-                }
-                
-                Section("Settings") {
-                    SettingsRowView(imageName: "bell.circle.fill", 
-                                    title: "Notifications",
-                                    tintColor: Color(.systemOrange))
-                    
-                    SettingsRowView(imageName: "creditcard.circle.fill",
-                                    title: "Payment Methods",
-                                    tintColor: Color(.systemBlue))
-                }
-                
-                Section("Account") {
-                    SettingsRowView(imageName: "dollarsign.square.fill",
-                                    title: "Become a driver",
-                                    tintColor: Color(.systemGreen))
-                    
-                    SettingsRowView(imageName: "arrow.left.square.fill",
-                                    title: "Sign out",
-                                    tintColor: Color(.systemRed))
-                    .onTapGesture {
-                        viewModel.signout()
                     }
                 }
             }
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.large)
         }
-        .navigationTitle("Settings")
-        .navigationBarTitleDisplayMode(.large)
     }
 }
 

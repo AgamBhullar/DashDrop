@@ -33,8 +33,8 @@ class DeveloperPreview {
         distanceToCustomer: 1000,
         travelTimeToCustomer: 24,
         state: .rejected,
-        selectedLabelOption: "The customer chose the prepaid label option."
-        //selectedPackageType: "Box"
+        selectedLabelOption: "The customer chose the prepaid label option.",
+        packageType: "Box"
     )
     
     

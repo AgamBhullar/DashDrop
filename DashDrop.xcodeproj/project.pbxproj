@@ -44,6 +44,9 @@
 		CA0E5DCB2B9B0A810013AA83 /* SelectedPrepaidOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0E5DCA2B9B0A810013AA83 /* SelectedPrepaidOption.swift */; };
 		CA0E5DCF2B9BD5AB0013AA83 /* ImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0E5DCE2B9BD5AB0013AA83 /* ImageUploader.swift */; };
 		CA0E5E0D2B9D2C850013AA83 /* RegistrationViewDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0E5E0C2B9D2C850013AA83 /* RegistrationViewDriver.swift */; };
+		CA7BF1112BA035230015796C /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = CA7BF1102BA035230015796C /* Kingfisher */; };
+		CA7BF1132BA04FFE0015796C /* OrderDeliveredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA7BF1122BA04FFE0015796C /* OrderDeliveredView.swift */; };
+		CA7BF1152BA051290015796C /* DriverDeliveredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA7BF1142BA051290015796C /* DriverDeliveredView.swift */; };
 		CAC1162B2B92A6D700690E6A /* DashDropApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1162A2B92A6D700690E6A /* DashDropApp.swift */; };
 		CAC1162F2B92A6D800690E6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAC1162E2B92A6D800690E6A /* Assets.xcassets */; };
 		CAC116322B92A6D800690E6A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAC116312B92A6D800690E6A /* Preview Assets.xcassets */; };
@@ -97,6 +100,8 @@
 		CA0E5DCA2B9B0A810013AA83 /* SelectedPrepaidOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPrepaidOption.swift; sourceTree = "<group>"; };
 		CA0E5DCE2B9BD5AB0013AA83 /* ImageUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploader.swift; sourceTree = "<group>"; };
 		CA0E5E0C2B9D2C850013AA83 /* RegistrationViewDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewDriver.swift; sourceTree = "<group>"; };
+		CA7BF1122BA04FFE0015796C /* OrderDeliveredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDeliveredView.swift; sourceTree = "<group>"; };
+		CA7BF1142BA051290015796C /* DriverDeliveredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverDeliveredView.swift; sourceTree = "<group>"; };
 		CAC116272B92A6D700690E6A /* DashDrop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DashDrop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAC1162A2B92A6D700690E6A /* DashDropApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashDropApp.swift; sourceTree = "<group>"; };
 		CAC1162E2B92A6D800690E6A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -161,6 +166,7 @@
 				CA0E5DA82B9A39780013AA83 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				CA0E5D9A2B9A39780013AA83 /* FirebaseDatabaseSwift in Frameworks */,
 				CA0E5DA42B9A39780013AA83 /* FirebaseFunctions in Frameworks */,
+				CA7BF1112BA035230015796C /* Kingfisher in Frameworks */,
 				CA0E5DBA2B9A39780013AA83 /* FirebaseStorageCombine-Community in Frameworks */,
 				CA0E5DB42B9A39780013AA83 /* FirebaseRemoteConfig in Frameworks */,
 				CA0E5D902B9A39780013AA83 /* FirebaseAppDistribution-Beta in Frameworks */,
@@ -364,7 +370,6 @@
 				CAC1166D2B93CD6000690E6A /* LoginView.swift */,
 				CAC1166F2B93CD6E00690E6A /* RegistrationView.swift */,
 				CA0E5E0C2B9D2C850013AA83 /* RegistrationViewDriver.swift */,
-				CA0E5DC32B9AEAF80013AA83 /* PrepaidLabelView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -446,6 +451,8 @@
 				CAC1165E2B931F2D00690E6A /* OrderRequestView.swift */,
 				CA0E5DBD2B9A8C9D0013AA83 /* OrderLoadingView.swift */,
 				CA0E5DBF2B9A8D7E0013AA83 /* OrderAcceptedView.swift */,
+				CA7BF1122BA04FFE0015796C /* OrderDeliveredView.swift */,
+				CA0E5DC32B9AEAF80013AA83 /* PrepaidLabelView.swift */,
 			);
 			path = Customers;
 			sourceTree = "<group>";
@@ -455,6 +462,7 @@
 			children = (
 				CAFCEC672B992193005F67DA /* AcceptOrderView.swift */,
 				CAE43F2E2B9FDC6A0007DA21 /* PickupPackageView.swift */,
+				CA7BF1142BA051290015796C /* DriverDeliveredView.swift */,
 			);
 			path = Drivers;
 			sourceTree = "<group>";
@@ -511,6 +519,7 @@
 				CA0E5DB52B9A39780013AA83 /* FirebaseRemoteConfigSwift */,
 				CA0E5DB72B9A39780013AA83 /* FirebaseStorage */,
 				CA0E5DB92B9A39780013AA83 /* FirebaseStorageCombine-Community */,
+				CA7BF1102BA035230015796C /* Kingfisher */,
 			);
 			productName = DashDrop;
 			productReference = CAC116272B92A6D700690E6A /* DashDrop.app */;
@@ -542,6 +551,7 @@
 			mainGroup = CAC1161E2B92A6D700690E6A;
 			packageReferences = (
 				CA0E5D842B9A39780013AA83 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				CA7BF10F2BA035220015796C /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = CAC116282B92A6D700690E6A /* Products */;
 			projectDirPath = "";
@@ -584,6 +594,8 @@
 				CAC116732B93D71100690E6A /* CustomInputField.swift in Sources */,
 				CA0E5E0D2B9D2C850013AA83 /* RegistrationViewDriver.swift in Sources */,
 				CAC116542B92B94900690E6A /* MapViewActionButton.swift in Sources */,
+				CA7BF1152BA051290015796C /* DriverDeliveredView.swift in Sources */,
+				CA7BF1132BA04FFE0015796C /* OrderDeliveredView.swift in Sources */,
 				CA0E5DC22B9A95270013AA83 /* Spinner.swift in Sources */,
 				CA0E5DBC2B9A5FFF0013AA83 /* GeoPoint.swift in Sources */,
 				CAFCEC592B97BD30005F67DA /* SavedLocationSearchView.swift in Sources */,
@@ -834,6 +846,14 @@
 				minimumVersion = 10.22.1;
 			};
 		};
+		CA7BF10F2BA035220015796C /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.11.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -971,6 +991,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CA0E5D842B9A39780013AA83 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseStorageCombine-Community";
+		};
+		CA7BF1102BA035230015796C /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CA7BF10F2BA035220015796C /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
