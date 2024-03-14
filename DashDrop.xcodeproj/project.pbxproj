@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B15CB052BA11029000457BD /* OrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B15CB042BA11029000457BD /* OrdersView.swift */; };
+		3B15CB072BA1104D000457BD /* OrdersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B15CB062BA1104D000457BD /* OrdersViewModel.swift */; };
 		CA0E5D832B9A38870013AA83 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CA0E5D822B9A38870013AA83 /* GoogleService-Info.plist */; };
 		CA0E5D862B9A39780013AA83 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CA0E5D852B9A39780013AA83 /* FirebaseAnalytics */; };
 		CA0E5D882B9A39780013AA83 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = CA0E5D872B9A39780013AA83 /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -90,6 +92,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3B15CB042BA11029000457BD /* OrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersView.swift; sourceTree = "<group>"; };
+		3B15CB062BA1104D000457BD /* OrdersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersViewModel.swift; sourceTree = "<group>"; };
 		CA0E5D822B9A38870013AA83 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CA0E5DBB2B9A5FFF0013AA83 /* GeoPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPoint.swift; sourceTree = "<group>"; };
 		CA0E5DBD2B9A8C9D0013AA83 /* OrderLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderLoadingView.swift; sourceTree = "<group>"; };
@@ -351,6 +355,7 @@
 			children = (
 				CAE43F2D2B9FDC390007DA21 /* Drivers */,
 				CAE43F2C2B9FDC370007DA21 /* Customers */,
+				3B15CB062BA1104D000457BD /* OrdersViewModel.swift */,
 			);
 			path = Orders;
 			sourceTree = "<group>";
@@ -407,6 +412,7 @@
 			isa = PBXGroup;
 			children = (
 				CAC116B42B955E4000690E6A /* SideMenuView.swift */,
+				3B15CB042BA11029000457BD /* OrdersView.swift */,
 				CAC116B82B96652800690E6A /* SideMenuOptionView.swift */,
 			);
 			path = Views;
@@ -581,6 +587,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CAC116AE2B9409D000690E6A /* AuthViewModel.swift in Sources */,
+				3B15CB072BA1104D000457BD /* OrdersViewModel.swift in Sources */,
 				CAFCEC612B97F84D005F67DA /* HomeViewModel.swift in Sources */,
 				CAC1165A2B92C5A700690E6A /* LocationSearchViewModel.swift in Sources */,
 				CAC116562B92BBD800690E6A /* LocationSearchView.swift in Sources */,
@@ -595,6 +602,7 @@
 				CA0E5E0D2B9D2C850013AA83 /* RegistrationViewDriver.swift in Sources */,
 				CAC116542B92B94900690E6A /* MapViewActionButton.swift in Sources */,
 				CA7BF1152BA051290015796C /* DriverDeliveredView.swift in Sources */,
+				3B15CB052BA11029000457BD /* OrdersView.swift in Sources */,
 				CA7BF1132BA04FFE0015796C /* OrderDeliveredView.swift in Sources */,
 				CA0E5DC22B9A95270013AA83 /* Spinner.swift in Sources */,
 				CA0E5DBC2B9A5FFF0013AA83 /* GeoPoint.swift in Sources */,

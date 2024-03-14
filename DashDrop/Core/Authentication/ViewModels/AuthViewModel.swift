@@ -152,6 +152,7 @@ class AuthViewModel: ObservableObject {
     @Published var userSession: FirebaseAuth.User?
     @Published var currentUser: User?
     
+    
     private let service = UserService.shared
     private var cancellables = Set<AnyCancellable>()
     
@@ -255,3 +256,5 @@ class AuthViewModel: ObservableObject {
         }
     }
 }
+
+

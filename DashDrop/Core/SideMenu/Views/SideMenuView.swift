@@ -82,7 +82,8 @@ struct SideMenuView: View {
                 .navigationDestination(for: SideMenuOptionViewModel.self) { viewModel in
                     switch viewModel {
                     case .orders:
-                        Text("Orders")
+                        //Text("Orders")
+                        OrdersView(viewModel: OrdersViewModel())
                     case .wallet:
                         Text("Wallet")
                     case .settings:

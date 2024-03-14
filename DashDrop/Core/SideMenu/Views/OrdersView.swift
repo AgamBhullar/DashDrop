@@ -9,21 +9,14 @@ import SwiftUI
 
 struct OrdersView: View {
     @ObservedObject var viewModel: OrdersViewModel // This view model will handle fetching orders from Firestore
-    let order: Order
+    //let order: Order
 
     var body: some View {
-        Text("Order Details")
-                    .font(.largeTitle) // Customize as needed
-                    .bold()
-                    .padding()
-        Section(order.dropoffLocationName) {
             List(viewModel.orders) { order in
+                Section("Order #: \(order.orderId ?? "")") {
                 VStack(alignment: .leading, spacing: 10) {
-//                    Text(order.dropoffLocationName)
-//                        .font(.headline)
-//                        .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                    Divider()
-                    Text("Order #: \(order.orderId ?? "")")
+                    Text(order.dropoffLocationName)
+                    //Text("Order #: \(order.orderId ?? "")")
                     Text("Customer Name: \(order.customerName)")
                     Text("Driver Name: \(order.driverName)")
                     Text("Order Status: \(order.state)")
@@ -40,6 +33,8 @@ struct OrdersView: View {
                 
             }
         }
+            .navigationTitle("Order Details")
+            .navigationBarTitleDisplayMode(.large)
         .onAppear {
             viewModel.fetchOrders()
         }

@@ -6,13 +6,28 @@
 //
 
 import SwiftUI
+import Firebase
 
-struct OrdersViewModel: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+class OrdersViewModel: ObservableObject {  // was ObservableObject
+    @Published var orders: [Order] = []
+    
+    
+    func fetchOrders() {
+        // Fetch orders for the current user from Firestore
+       
+        let uid = Auth.auth().currentUser?.uid ?? ""
+        Firestore.firestore().collection("orders")
+            .whereField("customerUid", isEqualTo: uid)
+            .addSnapshotListener { querySnapshot, error in
+                if let error = error {
+                    print("Error fetching orders: \(error)")
+                    return
+                }
+                self.orders = querySnapshot?.documents.compactMap { document in
+                    try? document.data(as: Order.self)
+                } ?? []
+            }
     }
 }
 
-#Preview {
-    OrdersViewModel()
-}
+
