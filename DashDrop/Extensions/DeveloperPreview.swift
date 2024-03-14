@@ -27,6 +27,7 @@ class DeveloperPreview {
         pickupLocationName: "La Rue",
         dropoffLocationName: "UPS",
         pickupLocationAddress: "184 Horizon St, Davis CA",
+        deliveryLocationAddress: "2916 La Rue Driver, Davis CA",
         pickupLocation: .init(latitude: 38.55106, longitude: -121.728798),
         dropoffLocation: .init(latitude: 38.046774, longitude: -121.9912501),
         tripCost: 5.0,
@@ -34,7 +35,7 @@ class DeveloperPreview {
         travelTimeToCustomer: 24,
         state: .rejected,
         selectedLabelOption: "The customer chose the prepaid label option.",
-        packageType: "Box"
+        packageType: "Flat Envelope"
     )
     
     

@@ -17,8 +17,10 @@ class HomeViewModel: NSObject, ObservableObject {
     
     @Published var drivers = [User]()
     @Published var order: Order?
+    @Published var receipt: Receipt?
     private let service = UserService.shared
-    @Published var currentUser: User?
+    var currentUser: User?
+    var routeToPickupLocation: MKRoute?
     private var cancellables = Set<AnyCancellable>()
     @Published var selectedPackageType: PackageType?
     //private var currentUser: User?
@@ -132,6 +134,7 @@ extension HomeViewModel {
             // Determine the pickup location name and address from the placemark
             let pickupLocationName = placemark.name ?? "Current Location"
             let pickupLocationAddress = self.addressFromPlacemark(placemark)
+            let deliveryLocationAddress = self.deliveryAddressFromPlacemark(placemark)
             
             // Check if there is an image to be uploaded
             if let selectedImage = self.selectedQRCodeImage {
@@ -149,6 +152,7 @@ extension HomeViewModel {
                         pickupLocationName: pickupLocationName,
                         dropoffLocationName: dropoffLocation.title,
                         pickupLocationAddress: pickupLocationAddress,
+                        deliveryLocationAddress: deliveryLocationAddress,
                         pickupLocation: pickupGeoPoint, // Use GeoPoint created from current location
                         dropoffLocation: dropoffGeoPoint,
                         tripCost: tripCost,
@@ -176,6 +180,7 @@ extension HomeViewModel {
                     pickupLocationName: pickupLocationName,
                     dropoffLocationName: dropoffLocation.title,
                     pickupLocationAddress: pickupLocationAddress,
+                    deliveryLocationAddress: deliveryLocationAddress,
                     pickupLocation: pickupGeoPoint, // Use GeoPoint created from current location
                     dropoffLocation: dropoffGeoPoint,
                     tripCost: tripCost,
@@ -200,6 +205,10 @@ extension HomeViewModel {
             print("DEBUG: Did upload trip to firestore")
         }
     }
+    
+    func cancelOrderAsCustomer() {
+        updateOrderState(state: .customerCancelled)
+    }
 }
 
 // MARK: - Driver API
@@ -220,7 +229,7 @@ extension HomeViewModel {
                 
                 self.getDestinationRoute(from: order.driverLocation.toCoordinate(),
                                          to: order.pickupLocation.toCoordinate()) { route in
-                    
+                    self.routeToPickupLocation = route
                     self.order?.travelTimeToCustomer = Int(route.expectedTravelTime / 60)
                     self.order?.distanceToCustomer = route.distance
                 }
@@ -267,6 +276,36 @@ extension HomeViewModel {
         }
     }
     
+    func fetchReceipt(forOrder orderID: String) {
+        let receiptRef = Firestore.firestore().collection("receipts").document(orderID)
+        receiptRef.getDocument { (document, error) in
+            if let document = document, document.exists, let receipt = try? document.data(as: Receipt.self) {
+                DispatchQueue.main.async {
+                    self.receipt = receipt
+                }
+            } else {
+                print("Document does not exist or failed to decode: \(error?.localizedDescription ?? "")")
+            }
+        }
+    }
+    
+    func refreshOrder() {
+        guard let orderID = order?.id else { return }
+        
+        let orderRef = Firestore.firestore().collection("orders").document(orderID)
+        orderRef.getDocument { (document, error) in
+            if let document = document, document.exists, let updatedOrder = try? document.data(as: Order.self) {
+                DispatchQueue.main.async {
+                    self.order = updatedOrder
+                }
+            } else {
+                print("Error fetching updated order: \(error?.localizedDescription ?? "Unknown error")")
+            }
+        }
+    }
+
+    
+ 
     func rejectOrder() {
         updateOrderState(state: .rejected)
     }
@@ -275,9 +314,18 @@ extension HomeViewModel {
         updateOrderState(state: .accepted)
     }
     
+    func cancelOrderAsDriver() {
+        updateOrderState(state: .driverCancelled)
+    }
+    
+    func preDelivery() {
+        updateOrderState(state: .predeliver)
+    }
+    
     func deliveredOrder() {
         updateOrderState(state: .delivered)
     }
+    
     
     private func updateOrderState(state: OrderState) {
         guard let order = order else { return }
@@ -292,6 +340,20 @@ extension HomeViewModel {
             print("DEBUG: Did update order with state \(state)")
         }
     }
+    
+    func completeOrder() {
+        guard let orderID = order?.id else { return }
+
+        let orderRef = Firestore.firestore().collection("orders").document(orderID)
+        orderRef.updateData(["status": "Order Completed"]) { error in
+            if let error = error {
+                print("Error updating order status: \(error.localizedDescription)")
+            } else {
+                print("Order completed successfully.")
+                // Any additional logic after completing the order
+            }
+        }
+    }
 }
 
 // MARK: - Location Search Helpers
@@ -299,6 +361,25 @@ extension HomeViewModel {
 extension HomeViewModel {
     
     func addressFromPlacemark(_ placemark: CLPlacemark) -> String {
+        var result = ""
+        
+        
+        if let subthoroughfare = placemark.subThoroughfare {
+            result += "\(subthoroughfare) "
+        }
+        
+        if let thoroughfare = placemark.thoroughfare {
+            result += thoroughfare
+        }
+        
+        if let subadministrativeArea = placemark.subAdministrativeArea {
+            result += ", \(subadministrativeArea)"
+        }
+        
+        return result
+    }
+    
+    func deliveryAddressFromPlacemark(_ placemark: CLPlacemark) -> String {
         var result = ""
         
         

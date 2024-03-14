@@ -12,7 +12,10 @@ enum OrderState: Int, Codable {
     case requested
     case rejected
     case accepted
+    case predeliver
     case delivered
+    case customerCancelled
+    case driverCancelled
 }
 
 struct Order: Identifiable, Codable {
@@ -26,6 +29,7 @@ struct Order: Identifiable, Codable {
     let pickupLocationName: String
     let dropoffLocationName: String
     let pickupLocationAddress: String
+    let deliveryLocationAddress: String
     let pickupLocation: GeoPoint
     let dropoffLocation: GeoPoint
     let tripCost: Double
@@ -35,7 +39,6 @@ struct Order: Identifiable, Codable {
     var qrcodeImageUrl: String? 
     let selectedLabelOption: String
     let packageType: String
-    var receiptImageUrl: String?
     
     var id: String {
         return orderId ?? ""

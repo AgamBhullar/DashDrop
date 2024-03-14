@@ -1,15 +1,16 @@
 //
-//  OrdersView.swift
+//  OrderView.swift
 //  DashDrop
 //
-//  Created by Harpreet Basota on 3/12/24.
+//  Created by Agam Bhullar on 3/13/24.
 //
 
 import SwiftUI
 
 struct OrdersView: View {
-    @ObservedObject var viewModel: OrdersViewModel // This view model will handle fetching orders from Firestore
-    //let order: Order
+    @ObservedObject var viewModel: OrdersViewModel
+    
+    
 
     var body: some View {
             List(viewModel.orders) { order in
@@ -21,7 +22,7 @@ struct OrdersView: View {
                     Text("Driver Name: \(order.driverName)")
                     Text("Order Status: \(order.state)")
                     Button{
-                        order.receiptImageUrl
+                        //receipt.receiptImageUrl
                     } label: {
                         Text("View receipt")
                     }

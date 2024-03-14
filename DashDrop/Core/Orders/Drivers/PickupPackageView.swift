@@ -23,17 +23,27 @@ struct PickupPackageView: View {
             //would you like to pickup view
             VStack {
                 HStack {
-                    Text("Pickup the package at Apple Campus")
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .lineLimit(2)
-                        .multilineTextAlignment(.leading)
-                        .frame(height: 44)
-                   
+                    VStack {
+                        Text("Dropoff The \(order.packageType) At \(order.dropoffLocationName)")
+                            .font(.headline)
+                            .fontWeight(.bold)
+//                            .lineLimit(2)
+//                            .multilineTextAlignment(.leading)
+//                            .frame(height: 44)
+                        
+                        Text(order.deliveryLocationAddress)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.gray)
+//                            .lineLimit(2)
+//                            .multilineTextAlignment(.leading)
+//                            .frame(height: 44)
+                        
+                    }
                     Spacer()
                     
                     VStack {
-                        Text("10")
+                        Text("\(order.travelTimeToCustomer)")
                             .bold()
                         
                         Text("min")
@@ -54,27 +64,28 @@ struct PickupPackageView: View {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         if let qrcodeImageUrl = order.qrcodeImageUrl, let url = URL(string: qrcodeImageUrl) {
-                            // QR Code Image View
-                            KFImage(url)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 100, height: 100)
-                                .onTapGesture {
-                                    self.isShowingFullScreenImage = true
-                                }
+                            Button(action: {
+                                viewModel.refreshOrder()
+                                self.isShowingFullScreenImage = true
+                            }) {
+                                Text("VIEW QR CODE")
+                                    .font(.headline)
+                                    .fontWeight(.bold)
+                                    .padding()
+                                    .frame(height: 56)
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                            }
+                            .sheet(isPresented: $isShowingFullScreenImage) {
+                                FullScreenImageView(url: url)
+                            }
                         } else {
                             Text(order.selectedLabelOption)
                                 .font(.headline)
-                               // .padding()
-                        }
-                            
-                    }
-                    .sheet(isPresented: $isShowingFullScreenImage) {
-                        if let qrcodeImageUrl = order.qrcodeImageUrl, let url = URL(string: qrcodeImageUrl) {
-                            FullScreenImageView(url: url)
                         }
                     }
-                    Spacer()
+                   // Spacer()
                     
                     VStack() {
                         
@@ -90,16 +101,19 @@ struct PickupPackageView: View {
                             
                             Text(order.packageType)
                                 .font(.headline)
-                               // .padding()
+                                .fontWeight(.semibold)
+                                .lineLimit(2)
+                                .multilineTextAlignment(.center)
+        
                         }
                     }
-                    .padding(.horizontal, 40)
+                    //.padding(.horizontal, 40)
                     
                     VStack(spacing: 6) {
                         Text("Pay")
                        
                         
-                        Text(order.tripCost.toCurrency())
+                        Text("\(order.tripCost.toCurrency())")
                             .font(.system(size: 24, weight: .semibold))
                     }
                     
@@ -107,13 +121,13 @@ struct PickupPackageView: View {
                 
                 Divider()
             }
-            .padding()
+           // .padding()
             
             HStack {
                 Button {
-                    print("DEBUG: Cancel Order")
+                    viewModel.cancelOrderAsDriver()
                 } label: {
-                    Text("Cancel Order")
+                    Text("CANCEL ORDER")
                         .font(.headline)
                         .fontWeight(.bold)
                         .padding()
@@ -127,9 +141,9 @@ struct PickupPackageView: View {
                 Spacer()
                 
                 Button {
-                    viewModel.deliveredOrder()
+                    viewModel.preDelivery()
                 } label: {
-                    Text("Deliver Order")
+                    Text("DELIVER ORDER")
                         .font(.headline)
                         .fontWeight(.bold)
                         .padding()
@@ -153,18 +167,11 @@ struct PickupPackageView: View {
     
 }
 
-struct FullScreenImageView: View {
-    let url: URL
-
-    var body: some View {
-        KFImage(url)
-            .resizable()
-            .scaledToFit()
-    }
-}
 
 struct PickupPackageView_Previews: PreviewProvider {
     static var previews: some View {
         PickupPackageView(order: dev.mockOrder)
     }
 }
+
+

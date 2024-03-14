@@ -75,23 +75,32 @@ extension HomeView {
                             .transition(.move(edge: .bottom))
                     } else if mapState == .orderAccepted {
                         // show order accepted view
-                        OrderAcceptedView()
+                        OrderAcceptedView(user: user)
                             .transition(.move(edge: .bottom))
                     } else if mapState == .orderRejected {
                         // show order rejected view
+                    } else if mapState == .orderpredelivery {
+                        //if homeViewModel.order != nil {
+                        DriverUploadingReceiptView()
                     } else if mapState == .orderDelivered {
-                        OrderDeliveredView()
+                        if let order = homeViewModel.order {
+                            OrderDeliveredView(order: order)
+                                .transition(.move(edge: .bottom))
+                        }
                     }
                 } else {
                     if let order = homeViewModel.order {
                         if mapState == .orderRequested {
-                            AcceptOrderView(order: order)
+                            AcceptOrderView(order: order, user: user)
                                 .transition(.move(edge: .bottom))
                         } else if mapState == .orderAccepted {
                             PickupPackageView(order: order)
                                 .transition(.move(edge: .bottom))
-                        } else if mapState == .orderDelivered {
+                        } else if mapState == .orderpredelivery {
                             DriverDeliveredView(order: order)
+                                .transition(.move(edge: .bottom))
+                        }  else if mapState == .orderDelivered  {
+                            //dismiss
                         }
                     }
                 }
@@ -119,8 +128,18 @@ extension HomeView {
                     self.mapState = .orderRejected
                 case .accepted:
                     self.mapState = .orderAccepted
+                case .customerCancelled:
+                    print("DEBUG: Customer cancelled")
+                case .driverCancelled:
+                    print("DEBUG: Driver cancelled")
+                case .predeliver:
+                    self.mapState = .orderpredelivery
+                    if homeViewModel.receipt == nil {
+                        homeViewModel.fetchReceipt(forOrder: order.id)
+                    }
                 case .delivered:
                     self.mapState = .orderDelivered
+                    
                 }
             }
         }

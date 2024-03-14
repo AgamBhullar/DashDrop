@@ -41,6 +41,7 @@ struct MapViewActionButton: View {
                 .orderRejected,
                 .orderAccepted,
                 .orderRequested,
+                .orderpredelivery,
                 .orderDelivered:
             mapState = .noInput
             viewModel.selectedDashDropLocation = nil
@@ -56,6 +57,8 @@ struct MapViewActionButton: View {
                 .polylineAdded,
                 .orderRejected,
                 .orderAccepted,
+                .orderpredelivery,
+                .orderDelivered,
                 .orderRequested:
             return "arrow.left"
         default:

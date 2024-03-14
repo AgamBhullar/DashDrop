@@ -29,5 +29,3 @@ class OrdersViewModel: ObservableObject {  // was ObservableObject
             }
     }
 }
-
-

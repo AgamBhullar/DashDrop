@@ -14,6 +14,7 @@ struct DriverDeliveredView: View {
     @State private var showImagePicker = false
     @State private var receiptImage: UIImage?
     @State private var uploadButtonEnabled = false
+    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         VStack {
@@ -62,8 +63,9 @@ struct DriverDeliveredView: View {
                 Button {
                     guard let receiptImage = receiptImage else { return }
                     viewModel.uploadReceiptImage(forOrder: order.id, image: receiptImage)
-                        // Handle completion, e.g., show a success message or update the UI
-                    
+                    viewModel.deliveredOrder()
+                    viewModel.completeOrder()
+                    presentationMode.wrappedValue.dismiss()
                 } label: {
                     Text("CONFIRM DELIVERY")
                         .fontWeight(.bold)
