@@ -103,100 +103,166 @@ extension HomeViewModel {
     }
     
 //    func requestOrder() {
-//        guard let driver = drivers.first else { return }
-//        guard let currentUser = currentUser else { return }
-//        guard let dropoffLocation = selectedDashDropLocation else { return }
-//        let dropoffGeoPoint = GeoPoint(latitude: dropoffLocation.coordinate.latitude,
-//                                       longitude: dropoffLocation.coordinate.longitude)
-//        let userLocation = CLLocation(latitude: currentUser.coordinates.latitude,
-//                                      longitude: currentUser.coordinates.longitude)
+//        guard let driver = drivers.first,
+//              let currentUser = currentUser,
+//              let dropoffLocation = selectedDashDropLocation,
+//              let currentLocation = LocationManager.shared.userLocation,
+//              let selectedPackage = selectedPackageType else { return }
 //        
-//        getPlacemark(forLocation: userLocation) { placemark, error in
-//            guard let placemark = placemark else { return }
+//
+//        let dropoffGeoPoint = GeoPoint(latitude: dropoffLocation.coordinate.latitude, longitude: dropoffLocation.coordinate.longitude)
+//        let pickupGeoPoint = GeoPoint(latitude: currentLocation.latitude, longitude: currentLocation.longitude)
+//
+//        let userLocation = CLLocation(latitude: currentLocation.latitude, longitude: currentLocation.longitude)
+//
+//        getPlacemark(forLocation: userLocation) { [weak self] placemark, error in
+//            guard let self = self, let placemark = placemark else { return }
 //            let tripCost = self.computeRidePrice(forType: .box)
+//            
+//            // Determine the pickup location name and address from the placemark
+//            let pickupLocationName = placemark.name ?? "Current Location"
+//            let pickupLocationAddress = self.addressFromPlacemark(placemark)
+//            let deliveryLocationAddress = self.deliveryAddressFromPlacemark(placemark)
+//            
+//            // Check if there is an image to be uploaded
+//            if let selectedImage = self.selectedQRCodeImage {
+//                // Upload image then get the URL
+//                ImageUploader.uploadImage(image: selectedImage) { imageUrl in
+//                    // Create the Order with the image URL
+//                    
+//                    let order = Order(
+//                        customerUid: currentUser.uid,
+//                        driverUid: driver.uid,
+//                        customerName: currentUser.fullname,
+//                        driverName: driver.fullname,
+//                        customerLocation: GeoPoint(latitude: currentLocation.latitude, longitude: currentLocation.longitude), // Use current location for customerLocation
+//                        driverLocation: driver.coordinates,
+//                        pickupLocationName: pickupLocationName,
+//                        dropoffLocationName: dropoffLocation.title,
+//                        pickupLocationAddress: pickupLocationAddress,
+//                        deliveryLocationAddress: deliveryLocationAddress,
+//                        pickupLocation: pickupGeoPoint, // Use GeoPoint created from current location
+//                        dropoffLocation: dropoffGeoPoint,
+//                        tripCost: tripCost,
+//                        distanceToCustomer: 0,
+//                        travelTimeToCustomer: 0,
+//                        state: .requested,
+//                        qrcodeImageUrl: imageUrl, // Include the image URL if available
+//                        selectedLabelOption: "The customer uploaded an image of the QR code",
+//                        packageType: selectedPackage.description
+//                    )
+//                    
+//                    // Now upload order data including the image URL
+//                    self.uploadOrderData(order)
+//                    print("DEBUG: Trip is \(order)")
+//                }
+//            } else {
+//                // No image, proceed with order creation without image URL
+//                let order = Order(
+//                    customerUid: currentUser.uid,
+//                    driverUid: driver.uid,
+//                    customerName: currentUser.fullname,
+//                    driverName: driver.fullname,
+//                    customerLocation: GeoPoint(latitude: currentLocation.latitude, longitude: currentLocation.longitude), // Use current location for customerLocation
+//                    driverLocation: driver.coordinates,
+//                    pickupLocationName: pickupLocationName,
+//                    dropoffLocationName: dropoffLocation.title,
+//                    pickupLocationAddress: pickupLocationAddress,
+//                    deliveryLocationAddress: deliveryLocationAddress,
+//                    pickupLocation: pickupGeoPoint, // Use GeoPoint created from current location
+//                    dropoffLocation: dropoffGeoPoint,
+//                    tripCost: tripCost,
+//                    distanceToCustomer: 0,
+//                    travelTimeToCustomer: 0,
+//                    state: .requested,
+//                    selectedLabelOption: "The customer selected the prepaid label option.",
+//                    packageType: selectedPackage.description
+//                )
+//                
+//                // Now upload order data without the image URL
+//                print("DEBUG: Trip is \(order)")
+//                self.uploadOrderData(order)
+//            }
+//        }
+//    }
+
     
     func requestOrder() {
-        guard let driver = drivers.first,
-              let currentUser = currentUser,
+        guard let currentUser = currentUser,
               let dropoffLocation = selectedDashDropLocation,
               let currentLocation = LocationManager.shared.userLocation,
               let selectedPackage = selectedPackageType else { return }
 
+        let customerLocation = CLLocation(latitude: currentLocation.latitude, longitude: currentLocation.longitude)
+        let dropoffCLLocation = CLLocation(latitude: dropoffLocation.coordinate.latitude, longitude: dropoffLocation.coordinate.longitude)
+
+
+        // Ensure drivers are fetched before this point, or fetch them here (asynchronously, with a completion handler).
+        let closestDriver = drivers.map { driver -> (driver: User, distance: CLLocationDistance) in
+            let driverLocation = CLLocation(latitude: driver.coordinates.latitude, longitude: driver.coordinates.longitude)
+            let distance = customerLocation.distance(from: driverLocation)
+            return (driver, distance)
+        }.min(by: { $0.distance < $1.distance })?.driver
+
+        guard let driver = closestDriver else {
+            print("No drivers available")
+            return
+        }
+
         let dropoffGeoPoint = GeoPoint(latitude: dropoffLocation.coordinate.latitude, longitude: dropoffLocation.coordinate.longitude)
         let pickupGeoPoint = GeoPoint(latitude: currentLocation.latitude, longitude: currentLocation.longitude)
 
-        let userLocation = CLLocation(latitude: currentLocation.latitude, longitude: currentLocation.longitude)
-
-        getPlacemark(forLocation: userLocation) { [weak self] placemark, error in
+        //pickup address
+        getPlacemark(forLocation: customerLocation) { [weak self] placemark, error in
             guard let self = self, let placemark = placemark else { return }
             let tripCost = self.computeRidePrice(forType: .box)
-            
-            // Determine the pickup location name and address from the placemark
+
             let pickupLocationName = placemark.name ?? "Current Location"
             let pickupLocationAddress = self.addressFromPlacemark(placemark)
-            let deliveryLocationAddress = self.deliveryAddressFromPlacemark(placemark)
             
-            // Check if there is an image to be uploaded
-            if let selectedImage = self.selectedQRCodeImage {
-                // Upload image then get the URL
-                ImageUploader.uploadImage(image: selectedImage) { imageUrl in
-                    // Create the Order with the image URL
-                    
-                    let order = Order(
-                        customerUid: currentUser.uid,
-                        driverUid: driver.uid,
-                        customerName: currentUser.fullname,
-                        driverName: driver.fullname,
-                        customerLocation: GeoPoint(latitude: currentLocation.latitude, longitude: currentLocation.longitude), // Use current location for customerLocation
-                        driverLocation: driver.coordinates,
-                        pickupLocationName: pickupLocationName,
-                        dropoffLocationName: dropoffLocation.title,
-                        pickupLocationAddress: pickupLocationAddress,
-                        deliveryLocationAddress: deliveryLocationAddress,
-                        pickupLocation: pickupGeoPoint, // Use GeoPoint created from current location
-                        dropoffLocation: dropoffGeoPoint,
-                        tripCost: tripCost,
-                        distanceToCustomer: 0,
-                        travelTimeToCustomer: 0,
-                        state: .requested,
-                        qrcodeImageUrl: imageUrl, // Include the image URL if available
-                        selectedLabelOption: "The customer uploaded an image of the QR code",
-                        packageType: selectedPackage.description
-                    )
-                    
-                    // Now upload order data including the image URL
-                    self.uploadOrderData(order)
-                    print("DEBUG: Trip is \(order)")
-                }
-            } else {
-                // No image, proceed with order creation without image URL
-                let order = Order(
-                    customerUid: currentUser.uid,
-                    driverUid: driver.uid,
-                    customerName: currentUser.fullname,
-                    driverName: driver.fullname,
-                    customerLocation: GeoPoint(latitude: currentLocation.latitude, longitude: currentLocation.longitude), // Use current location for customerLocation
-                    driverLocation: driver.coordinates,
-                    pickupLocationName: pickupLocationName,
-                    dropoffLocationName: dropoffLocation.title,
-                    pickupLocationAddress: pickupLocationAddress,
-                    deliveryLocationAddress: deliveryLocationAddress,
-                    pickupLocation: pickupGeoPoint, // Use GeoPoint created from current location
-                    dropoffLocation: dropoffGeoPoint,
-                    tripCost: tripCost,
-                    distanceToCustomer: 0,
-                    travelTimeToCustomer: 0,
-                    state: .requested,
-                    selectedLabelOption: "The customer selected the prepaid label option.",
-                    packageType: selectedPackage.description
-                )
+           // deliver address
+            getPlacemark(forLocation: dropoffCLLocation) { [weak self] pickupPlacemark, error in
+                guard let self = self, let pickupPlacemark = pickupPlacemark else { return }
+                let deliveryLocationAddress = self.deliveryAddressFromPlacemark(pickupPlacemark)
                 
-                // Now upload order data without the image URL
-                print("DEBUG: Trip is \(order)")
-                self.uploadOrderData(order)
+                if let selectedImage = self.selectedQRCodeImage {
+                    ImageUploader.uploadImage(image: selectedImage) { imageUrl in
+                        let order = self.createOrder(currentUser: currentUser, driver: driver, pickupLocationName: pickupLocationName, dropoffLocation: dropoffLocation, pickupLocationAddress: pickupLocationAddress, deliveryLocationAddress: deliveryLocationAddress, pickupGeoPoint: pickupGeoPoint, dropoffGeoPoint: dropoffGeoPoint, tripCost: tripCost, imageUrl: imageUrl, selectedPackage: selectedPackage)
+                        self.uploadOrderData(order)
+                    }
+                } else {
+                    let order = self.createOrder(currentUser: currentUser, driver: driver, pickupLocationName: pickupLocationName, dropoffLocation: dropoffLocation, pickupLocationAddress: pickupLocationAddress, deliveryLocationAddress: deliveryLocationAddress, pickupGeoPoint: pickupGeoPoint, dropoffGeoPoint: dropoffGeoPoint, tripCost: tripCost, imageUrl: nil, selectedPackage: selectedPackage)
+                    self.uploadOrderData(order)
+                }
             }
         }
     }
+
+    private func createOrder(currentUser: User, driver: User, pickupLocationName: String, dropoffLocation: DashDropLocation, pickupLocationAddress: String, deliveryLocationAddress: String, pickupGeoPoint: GeoPoint, dropoffGeoPoint: GeoPoint, tripCost: Double, imageUrl: String?, selectedPackage: PackageType) -> Order {
+        return Order(
+            customerUid: currentUser.uid,
+            driverUid: driver.uid,
+            customerName: currentUser.fullname,
+            driverName: driver.fullname,
+            customerLocation: pickupGeoPoint,
+            driverLocation: driver.coordinates,
+            pickupLocationName: pickupLocationName,
+            dropoffLocationName: dropoffLocation.title,
+            pickupLocationAddress: pickupLocationAddress,
+            deliveryLocationAddress: deliveryLocationAddress,
+            pickupLocation: pickupGeoPoint,
+            dropoffLocation: dropoffGeoPoint,
+            tripCost: tripCost,
+            distanceToCustomer: 0, // This could be calculated if needed
+            travelTimeToCustomer: 0, // This could be calculated based on the distance
+            state: .requested,
+            qrcodeImageUrl: imageUrl ?? "",
+            selectedLabelOption: imageUrl != nil ? "The customer uploaded an image of the QR code" : "The customer selected the prepaid label option.",
+            packageType: selectedPackage.description
+        )
+    }
+
+    // The rest of your methods like `uploadOrderData` remain unchanged.
 
 
     private func uploadOrderData(_ order: Order) {
@@ -379,19 +445,19 @@ extension HomeViewModel {
         return result
     }
     
-    func deliveryAddressFromPlacemark(_ placemark: CLPlacemark) -> String {
+    func deliveryAddressFromPlacemark(_ pickupPlacemark: CLPlacemark) -> String {
         var result = ""
         
         
-        if let subthoroughfare = placemark.subThoroughfare {
+        if let subthoroughfare = pickupPlacemark.subThoroughfare {
             result += "\(subthoroughfare) "
         }
         
-        if let thoroughfare = placemark.thoroughfare {
+        if let thoroughfare = pickupPlacemark.thoroughfare {
             result += thoroughfare
         }
         
-        if let subadministrativeArea = placemark.subAdministrativeArea {
+        if let subadministrativeArea = pickupPlacemark.subAdministrativeArea {
             result += ", \(subadministrativeArea)"
         }
         
