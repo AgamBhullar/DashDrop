@@ -113,11 +113,11 @@ extension MapViewRepresentable {
         
         func configurePolylineToPickupLocation(withRoute route: MKRoute) {
             self.parent.mapView.addOverlay(route.polyline)
-            self.parent.mapState = .polylineAdded
+            //self.parent.mapState = .polylineAdded
             let rect = self.parent.mapView.mapRectThatFits(route.polyline.boundingMapRect,
                                                            edgePadding: .init(top: 88,
                                                                               left: 32,
-                                                                              bottom: 400,
+                                                                              bottom: 500,
                                                                               right: 32))
             self.parent.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
         }
