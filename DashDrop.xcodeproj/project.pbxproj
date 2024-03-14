@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3B15CB052BA11029000457BD /* OrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B15CB042BA11029000457BD /* OrdersView.swift */; };
 		3B15CB072BA1104D000457BD /* OrdersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B15CB062BA1104D000457BD /* OrdersViewModel.swift */; };
+		3B58BFB62BA2C95E0010041F /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B58BFB52BA2C95E0010041F /* Test.swift */; };
 		CA0E5D832B9A38870013AA83 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CA0E5D822B9A38870013AA83 /* GoogleService-Info.plist */; };
 		CA0E5D862B9A39780013AA83 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CA0E5D852B9A39780013AA83 /* FirebaseAnalytics */; };
 		CA0E5D882B9A39780013AA83 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = CA0E5D872B9A39780013AA83 /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -94,6 +95,7 @@
 /* Begin PBXFileReference section */
 		3B15CB042BA11029000457BD /* OrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersView.swift; sourceTree = "<group>"; };
 		3B15CB062BA1104D000457BD /* OrdersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersViewModel.swift; sourceTree = "<group>"; };
+		3B58BFB52BA2C95E0010041F /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		CA0E5D822B9A38870013AA83 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CA0E5DBB2B9A5FFF0013AA83 /* GeoPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPoint.swift; sourceTree = "<group>"; };
 		CA0E5DBD2B9A8C9D0013AA83 /* OrderLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderLoadingView.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				CA0E5DC62B9AFD6D0013AA83 /* ImagePicker.swift */,
+				3B58BFB52BA2C95E0010041F /* Test.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -631,6 +634,7 @@
 				CAC1165F2B931F2D00690E6A /* OrderRequestView.swift in Sources */,
 				CAFCEC6A2B9930F6005F67DA /* Order.swift in Sources */,
 				CA0E5DC02B9A8D7E0013AA83 /* OrderAcceptedView.swift in Sources */,
+				3B58BFB62BA2C95E0010041F /* Test.swift in Sources */,
 				CAC116522B92B7A900690E6A /* LocationSearchActivationView.swift in Sources */,
 				CAFCEC572B97B8FB005F67DA /* SavedModelViewModel.swift in Sources */,
 				CAC116582B92BF1A00690E6A /* LocationSearchResultCell.swift in Sources */,
