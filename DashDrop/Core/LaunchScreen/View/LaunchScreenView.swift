@@ -12,14 +12,14 @@ struct LaunchScreenView: View {
     @State private var firstPhaseIsAnimating: Bool = false
     @State private var secondPhaseIsAnimating: Bool = false
 
-    private let timer = Timer.publish(every: 0.45,
+    private let timer = Timer.publish(every: 0.4,
                                       on: .main,
                                       in: .common).autoconnect()
     
     var body: some View {
         ZStack {
             background
-            logo1x
+            logo
         }
         .onReceive(timer) { input in
         
@@ -52,12 +52,12 @@ struct LaunchScreenView_Previews: PreviewProvider {
 private extension LaunchScreenView {
     
     var background: some View {
-        Color("LaunchScreenBackground")
+        Color("BackgroundColor")
             .edgesIgnoringSafeArea(.all)
     }
     
-    var logo1x: some View {
-        Image("logo1x")
+    var logo: some View {
+        Image("LaunchscreenLogo")
             .scaleEffect(firstPhaseIsAnimating ? 0.6 : 1)
             .scaleEffect(secondPhaseIsAnimating ? UIScreen.main.bounds.size.height / 4 : 1)
     }

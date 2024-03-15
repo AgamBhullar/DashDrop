@@ -7,6 +7,54 @@
 
 import SwiftUI
 
+struct CustomUITextField: UIViewRepresentable {
+    class Coordinator: NSObject, UITextFieldDelegate {
+        @Binding var text: String
+        var didBeginEditing: () -> Void
+        
+        init(text: Binding<String>, didBeginEditing: @escaping () -> Void) {
+            self._text = text
+            self.didBeginEditing = didBeginEditing
+        }
+        
+        func textFieldDidChangeSelection(_ textField: UITextField) {
+            text = textField.text ?? ""
+        }
+        
+        func textFieldDidBeginEditing(_ textField: UITextField) {
+            self.didBeginEditing()
+        }
+    }
+    
+    var isSecureField: Bool = false
+    var placeholder: String
+    @Binding var text: String
+    
+    var placeholderColor: UIColor = .gray // Set your placeholder color here
+    
+    func makeUIView(context: Context) -> UITextField {
+        let textField = UITextField(frame: .zero)
+        textField.isSecureTextEntry = isSecureField
+        textField.attributedPlaceholder = NSAttributedString(
+            string: placeholder,
+            attributes: [.foregroundColor: placeholderColor]
+        )
+        textField.delegate = context.coordinator
+        textField.textColor = .white // Set text color here
+        return textField
+    }
+    
+    func updateUIView(_ uiView: UITextField, context: Context) {
+        uiView.text = text
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(text: $text, didBeginEditing: {
+            // Handle did begin editing if needed
+        })
+    }
+}
+
 struct CustomInputField: View {
     @Binding var text: String
     let title: String
@@ -21,14 +69,9 @@ struct CustomInputField: View {
                 .fontWeight(.semibold)
                 .font(.footnote)
             
-            //text field
-            
-            if isSecureField {
-                SecureField(placeholder, text: $text)
-            } else {
-                TextField(placeholder, text: $text)
-                    .foregroundColor(.white)
-            }
+            // Custom UITextField
+            CustomUITextField(isSecureField: isSecureField, placeholder: placeholder, text: $text, placeholderColor: UIColor.gray)
+                .frame(height: 40) // Set the desired height
             
             //divider
             Rectangle()

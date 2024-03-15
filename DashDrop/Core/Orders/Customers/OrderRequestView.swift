@@ -171,6 +171,7 @@ struct OrderRequestView: View {
         .padding(.bottom, 24)
         .background(Color.theme.backgroundColor)
         .cornerRadius(16)
+        .shadow(color: Color.theme.secondaryBackgroundColor, radius: 20)
     }
     
     private func isConfirmOrderEnabled() -> Bool {

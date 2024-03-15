@@ -13,6 +13,7 @@ struct HomeView: View {
 //    @EnvironmentObject var locationViewModel: LocationSearchViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var homeViewModel: HomeViewModel
+    @EnvironmentObject var launchScreenManager: LaunchScreenManager
     
     var body: some View {
         Group {

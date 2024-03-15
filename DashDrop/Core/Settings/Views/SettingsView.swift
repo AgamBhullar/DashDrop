@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     private let user: User
     @EnvironmentObject var viewModel: AuthViewModel
+    @Environment(\.dismiss) private var dismiss
     
     init(user: User) {
         self.user = user
@@ -76,7 +77,7 @@ struct SettingsView: View {
                         
                         SettingsRowView(imageName: "arrow.left.square.fill",
                                         title: "Sign out",
-                                        tintColor: Color(.systemRed))
+                                        tintColor: Color("CustomColor1"))
                         .onTapGesture {
                             viewModel.signout()
                         }
@@ -85,7 +86,22 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "arrow.left")
+                            .font(.title)
+                            .imageScale(.medium)
+                            .foregroundColor(Color("CustomColor1"))
+                    }
+                }
+            }
+            .background(Color.theme.backgroundColor)
         }
+        
     }
 }
 

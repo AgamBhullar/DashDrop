@@ -80,6 +80,9 @@
 		CAC116B72B96635700690E6A /* SideMenuOptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC116B62B96635700690E6A /* SideMenuOptionViewModel.swift */; };
 		CAC116B92B96652800690E6A /* SideMenuOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC116B82B96652800690E6A /* SideMenuOptionView.swift */; };
 		CAC116BC2B96BA5700690E6A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC116BB2B96BA5700690E6A /* SettingsView.swift */; };
+		CAE092BE2BA432DC0022828B /* LaunchScreenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE092BD2BA432DC0022828B /* LaunchScreenManager.swift */; };
+		CAE092C22BA434200022828B /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE092C12BA434200022828B /* LaunchScreenView.swift */; };
+		CAE092C52BA4C8D30022828B /* PasswordResetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE092C42BA4C8D30022828B /* PasswordResetView.swift */; };
 		CAE43F2F2B9FDC6A0007DA21 /* PickupPackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43F2E2B9FDC6A0007DA21 /* PickupPackageView.swift */; };
 		CAFCEC532B97A111005F67DA /* SavedLocationRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAFCEC522B97A111005F67DA /* SavedLocationRowView.swift */; };
 		CAFCEC552B97A5EC005F67DA /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAFCEC542B97A5EC005F67DA /* SettingsRowView.swift */; };
@@ -142,6 +145,10 @@
 		CAC116B62B96635700690E6A /* SideMenuOptionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuOptionViewModel.swift; sourceTree = "<group>"; };
 		CAC116B82B96652800690E6A /* SideMenuOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuOptionView.swift; sourceTree = "<group>"; };
 		CAC116BB2B96BA5700690E6A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		CAE092BD2BA432DC0022828B /* LaunchScreenManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchScreenManager.swift; sourceTree = "<group>"; };
+		CAE092C12BA434200022828B /* LaunchScreenView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
+		CAE092C32BA436C10022828B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CAE092C42BA4C8D30022828B /* PasswordResetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetView.swift; sourceTree = "<group>"; };
 		CAE43F2E2B9FDC6A0007DA21 /* PickupPackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupPackageView.swift; sourceTree = "<group>"; };
 		CAFCEC522B97A111005F67DA /* SavedLocationRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedLocationRowView.swift; sourceTree = "<group>"; };
 		CAFCEC542B97A5EC005F67DA /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
@@ -223,6 +230,7 @@
 		CAC116292B92A6D700690E6A /* DashDrop */ = {
 			isa = PBXGroup;
 			children = (
+				CAE092C32BA436C10022828B /* Info.plist */,
 				CA0E5DC52B9AFD570013AA83 /* Utils */,
 				CAFCEC642B9914DE005F67DA /* Services */,
 				CAC116712B93D6F100690E6A /* ReusableItems */,
@@ -268,6 +276,7 @@
 		CAC116422B92A77500690E6A /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				CAE092BA2BA432C10022828B /* LaunchScreen */,
 				CAC116BA2B96BA4900690E6A /* Settings */,
 				CAC116B12B955D9800690E6A /* SideMenu */,
 				CAC1166A2B93CD3D00690E6A /* Authentication */,
@@ -383,6 +392,7 @@
 				CAC1166D2B93CD6000690E6A /* LoginView.swift */,
 				CAC1166F2B93CD6E00690E6A /* RegistrationView.swift */,
 				CA0E5E0C2B9D2C850013AA83 /* RegistrationViewDriver.swift */,
+				CAE092C42BA4C8D30022828B /* PasswordResetView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -459,6 +469,31 @@
 				CAFCEC562B97B8FB005F67DA /* SavedModelViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		CAE092BA2BA432C10022828B /* LaunchScreen */ = {
+			isa = PBXGroup;
+			children = (
+				CAE092BC2BA432CF0022828B /* Manager */,
+				CAE092BB2BA432CC0022828B /* View */,
+			);
+			path = LaunchScreen;
+			sourceTree = "<group>";
+		};
+		CAE092BB2BA432CC0022828B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				CAE092C12BA434200022828B /* LaunchScreenView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		CAE092BC2BA432CF0022828B /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				CAE092BD2BA432DC0022828B /* LaunchScreenManager.swift */,
+			);
+			path = Manager;
 			sourceTree = "<group>";
 		};
 		CAE43F2C2B9FDC370007DA21 /* Customers */ = {
@@ -600,6 +635,7 @@
 			files = (
 				CA7BF1172BA18EA60015796C /* Receipt.swift in Sources */,
 				CAC116AE2B9409D000690E6A /* AuthViewModel.swift in Sources */,
+				CAE092BE2BA432DC0022828B /* LaunchScreenManager.swift in Sources */,
 				CAFCEC612B97F84D005F67DA /* HomeViewModel.swift in Sources */,
 				CA7BF11D2BA2C43B0015796C /* OrdersView.swift in Sources */,
 				CA7BF1192BA19B330015796C /* FullScreenImageView.swift in Sources */,
@@ -636,11 +672,13 @@
 				CA0E5DBE2B9A8C9D0013AA83 /* OrderLoadingView.swift in Sources */,
 				CAC116B92B96652800690E6A /* SideMenuOptionView.swift in Sources */,
 				CAFCEC5B2B97C5E6005F67DA /* LocationSearchResultsView.swift in Sources */,
+				CAE092C22BA434200022828B /* LaunchScreenView.swift in Sources */,
 				CAC116492B92A7B600690E6A /* MapViewRepresentable.swift in Sources */,
 				CAFCEC532B97A111005F67DA /* SavedLocationRowView.swift in Sources */,
 				CA0E5DC72B9AFD6D0013AA83 /* ImagePicker.swift in Sources */,
 				CAFCEC682B992193005F67DA /* AcceptOrderView.swift in Sources */,
 				CA0E5DCF2B9BD5AB0013AA83 /* ImageUploader.swift in Sources */,
+				CAE092C52BA4C8D30022828B /* PasswordResetView.swift in Sources */,
 				CAC1162B2B92A6D700690E6A /* DashDropApp.swift in Sources */,
 				CAFCEC5F2B97EF52005F67DA /* DeveloperPreview.swift in Sources */,
 				CA0E5DC42B9AEAF80013AA83 /* PrepaidLabelView.swift in Sources */,
@@ -789,17 +827,18 @@
 				DEVELOPMENT_TEAM = 7UGX3MVTL4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DashDrop/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Dash Drop";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please allow us to access your location to find you nearby drivers";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "C--.DashDrop";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -819,17 +858,18 @@
 				DEVELOPMENT_TEAM = 7UGX3MVTL4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DashDrop/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Dash Drop";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please allow us to access your location to find you nearby drivers";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "C--.DashDrop";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

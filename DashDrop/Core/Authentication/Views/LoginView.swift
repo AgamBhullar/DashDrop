@@ -11,6 +11,7 @@ struct LoginView: View {
     @State var email = ""
     @State var password = ""
     @EnvironmentObject var viewModel: AuthViewModel
+    @State private var animate = false
     
     var body: some View {
         NavigationStack {
@@ -18,6 +19,12 @@ struct LoginView: View {
                 Color(.black)
                     .ignoresSafeArea()
                 
+                // Add tap gesture here to dismiss keyboard
+                                Color.clear
+                    .onTapGesture {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
+                                
                 VStack {
                     
                     // image and title
@@ -98,9 +105,18 @@ struct LoginView: View {
                                 .foregroundColor(.black)
                         }
                         .frame(width: UIScreen.main.bounds.width - 32, height: 50)
+                        .scaleEffect(animate ? 1.1 : 1.0)
                     }
                     .background(Color("CustomColor1"))
+                    .disabled(!formIsValid)
+                    .opacity(formIsValid ? 1.0 : 0.5)
                     .cornerRadius(10)
+                    .padding(.top, 24)
+                    .onAppear {
+                        withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
+                            animate = true
+                        }
+                    }
 
                     
                     //sign up button
@@ -126,10 +142,22 @@ struct LoginView: View {
     }
 }
 
-
+extension LoginView: AuthenticationFormProtocol {
+    var formIsValid: Bool {
+        return !email.isEmpty
+        && email.contains("@")
+        && !password.isEmpty
+        && password.count > 5
+    }
+}
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
     }
 }
+
+
+
+
+

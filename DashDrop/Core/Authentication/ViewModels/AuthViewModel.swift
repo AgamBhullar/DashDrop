@@ -148,6 +148,10 @@ import Firebase
 import FirebaseFirestoreSwift
 import Combine
 
+protocol AuthenticationFormProtocol {
+    var formIsValid: Bool { get }
+}
+
 class AuthViewModel: ObservableObject {
     @Published var userSession: FirebaseAuth.User?
     @Published var currentUser: User?
@@ -252,6 +256,16 @@ class AuthViewModel: ObservableObject {
             
             guard let user = try? snapshot.data(as: User.self) else { return }
             self.currentUser = user
+        }
+    }
+    
+    func sendPasswordResetEmail(to email: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        Auth.auth().sendPasswordReset(withEmail: email) { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
         }
     }
 }

@@ -113,7 +113,10 @@ struct PrepaidLabelView: View {
                 .disabled(!isConfirmSelectionEnabled())
                 .padding()
         }
-        .sheet(isPresented: $showImagePicker, 
+        .background(Color.theme.backgroundColor)
+        .cornerRadius(16)
+        .shadow(color: Color.theme.secondaryBackgroundColor, radius: 20)
+        .sheet(isPresented: $showImagePicker,
                onDismiss: loadImage) {
             ImagePicker(selectedImage: $selectedImage)
         }
