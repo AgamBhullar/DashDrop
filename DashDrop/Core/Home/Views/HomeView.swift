@@ -79,6 +79,10 @@ extension HomeView {
                             .transition(.move(edge: .bottom))
                     } else if mapState == .orderRejected {
                         // show order rejected view
+                        if let order = homeViewModel.order {
+                            OrderRejectedView(order: order)
+                                .transition(.move(edge: .bottom))
+                        }
                     } else if mapState == .orderpredelivery {
                         //if homeViewModel.order != nil {
                         DriverUploadingReceiptView()
@@ -118,7 +122,13 @@ extension HomeView {
             }
         }
         .onReceive(homeViewModel.$order) { order in
-            guard let order = order else { return }
+            guard let order = order, !order.isCompletedForCustomer, !order.isCompletedForDriver else {
+                    // Reset to the initial state if the order is nil or completed
+                    withAnimation(.spring()) {
+                        self.mapState = .noInput
+                    }
+                    return
+                }
             
             withAnimation(.spring()) {
                 switch order.state {

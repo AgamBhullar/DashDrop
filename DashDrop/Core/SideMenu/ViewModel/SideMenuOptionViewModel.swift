@@ -12,6 +12,7 @@ enum SideMenuOptionViewModel: Int, CaseIterable, Identifiable {
     case wallet
     case settings
     case messages
+    //case switchAccount
     
     var title: String {
         switch self {
@@ -19,6 +20,7 @@ enum SideMenuOptionViewModel: Int, CaseIterable, Identifiable {
         case .wallet: return "Wallet"
         case .settings: return "Settings"
         case .messages: return "Messages"
+       // case .switchAccount: return "Switch Account"
         }
     }
     
@@ -28,6 +30,7 @@ enum SideMenuOptionViewModel: Int, CaseIterable, Identifiable {
         case .wallet: return "creditcard"
         case .settings: return "gear"
         case .messages: return "bubble.left"
+        //case .switchAccount: return "arrow.2.circlepath"
         }
     }
     

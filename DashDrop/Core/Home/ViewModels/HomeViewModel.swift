@@ -19,7 +19,7 @@ class HomeViewModel: NSObject, ObservableObject {
     @Published var order: Order?
     @Published var receipt: Receipt?
     private let service = UserService.shared
-    var currentUser: User?
+    @Published var currentUser: User?
     var routeToPickupLocation: MKRoute?
     private var cancellables = Set<AnyCancellable>()
     @Published var selectedPackageType: PackageType?
@@ -75,11 +75,22 @@ class HomeViewModel: NSObject, ObservableObject {
 
 extension HomeViewModel {
     
+    func resetOrderAndUserState() {
+            self.order = nil
+            //self.receipt = nil
+        }
+    
+    func resetDriverState() {
+        self.order = nil
+    }
+    
     func addOrderObserverForCustomer() {
         guard let currentUser = currentUser, currentUser.accountType == .customer else { return }
         
         Firestore.firestore().collection("orders")
             .whereField("customerUid", isEqualTo: currentUser.uid)
+            .whereField("isCompletedForCustomer", isEqualTo: false)
+            .whereField("isCompletedForDriver", isEqualTo: false)
             .addSnapshotListener { snapshot, _ in
                 guard let change = snapshot?.documentChanges.first,
                         change.type == .added
@@ -238,7 +249,7 @@ extension HomeViewModel {
         }
     }
 
-    private func createOrder(currentUser: User, driver: User, pickupLocationName: String, dropoffLocation: DashDropLocation, pickupLocationAddress: String, deliveryLocationAddress: String, pickupGeoPoint: GeoPoint, dropoffGeoPoint: GeoPoint, tripCost: Double, imageUrl: String?, selectedPackage: PackageType) -> Order {
+    private func createOrder(currentUser: User, driver: User, pickupLocationName: String, dropoffLocation: DashDropLocation, pickupLocationAddress: String, deliveryLocationAddress: String, pickupGeoPoint: GeoPoint, dropoffGeoPoint: GeoPoint, tripCost: Double, imageUrl: String?, selectedPackage: PackageType, isCompletedForCustomer: Bool = false, isCompletedForDriver: Bool = false) -> Order {
         return Order(
             customerUid: currentUser.uid,
             driverUid: driver.uid,
@@ -258,7 +269,9 @@ extension HomeViewModel {
             state: .requested,
             qrcodeImageUrl: imageUrl ?? "",
             selectedLabelOption: imageUrl != nil ? "The customer uploaded an image of the QR code" : "The customer selected the prepaid label option.",
-            packageType: selectedPackage.description
+            packageType: selectedPackage.description,
+            isCompletedForCustomer: isCompletedForCustomer,
+            isCompletedForDriver: isCompletedForDriver
         )
     }
 
@@ -354,6 +367,7 @@ extension HomeViewModel {
             }
         }
     }
+
     
     func refreshOrder() {
         guard let orderID = order?.id else { return }
@@ -370,7 +384,6 @@ extension HomeViewModel {
         }
     }
 
-    
  
     func rejectOrder() {
         updateOrderState(state: .rejected)
@@ -407,19 +420,31 @@ extension HomeViewModel {
         }
     }
     
-    func completeOrder() {
-        guard let orderID = order?.id else { return }
-
-        let orderRef = Firestore.firestore().collection("orders").document(orderID)
-        orderRef.updateData(["status": "Order Completed"]) { error in
+    func markOrderAsCompletedForCustomer(orderId: String) {
+        Firestore.firestore().collection("orders").document(orderId).updateData(["isCompletedForCustomer": true]) { error in
             if let error = error {
-                print("Error updating order status: \(error.localizedDescription)")
+                print("DEBUG: Error marking order as completed: \(error.localizedDescription)")
             } else {
-                print("Order completed successfully.")
-                // Any additional logic after completing the order
+                print("DEBUG: Order marked as completed successfully.")
+                // After marking as completed, you may want to reset the local app state
+                self.resetOrderAndUserState()
             }
         }
     }
+    
+    func markOrderAsCompletedForDriver(orderId: String) {
+        Firestore.firestore().collection("orders").document(orderId).updateData(["isCompletedForDriver": true]) { error in
+            if let error = error {
+                print("Error marking order as completed: \(error.localizedDescription)")
+            } else {
+                print("Order marked as completed successfully.")
+                // After marking as completed, you may want to reset the local app state
+                self.resetOrderAndUserState()
+            }
+        }
+    }
+    
+    
 }
 
 // MARK: - Location Search Helpers

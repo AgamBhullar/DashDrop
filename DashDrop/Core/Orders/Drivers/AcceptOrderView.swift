@@ -14,8 +14,7 @@ struct AcceptOrderView: View {
     let order: Order
     let annotationItem: DashDropLocation
     @EnvironmentObject var viewModel: HomeViewModel
-    
-    
+    @Environment(\.presentationMode) var presentationMode
     
     init(order: Order, user: User) {
         let center = CLLocationCoordinate2D(latitude: order.pickupLocation.latitude,
@@ -155,6 +154,12 @@ struct AcceptOrderView: View {
                 HStack {
                     Button {
                         viewModel.rejectOrder()
+                        if let orderId = order.orderId {
+                                viewModel.markOrderAsCompletedForDriver(orderId: orderId)
+                                viewModel.resetDriverState()
+                            }
+                            self.presentationMode.wrappedValue.dismiss()
+                        
                     } label: {
                         Text("Reject")
                             .font(.headline)

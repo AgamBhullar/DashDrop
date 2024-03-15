@@ -64,8 +64,12 @@ struct DriverDeliveredView: View {
                     guard let receiptImage = receiptImage else { return }
                     viewModel.uploadReceiptImage(forOrder: order.id, image: receiptImage)
                     viewModel.deliveredOrder()
-                    viewModel.completeOrder()
-                    presentationMode.wrappedValue.dismiss()
+                    //viewModel.completeOrder()
+                    if let orderId = order.orderId {
+                            viewModel.markOrderAsCompletedForDriver(orderId: orderId)
+                            viewModel.resetDriverState()
+                        }
+                        self.presentationMode.wrappedValue.dismiss()
                 } label: {
                     Text("CONFIRM DELIVERY")
                         .fontWeight(.bold)

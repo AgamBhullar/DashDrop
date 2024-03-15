@@ -40,11 +40,11 @@ struct SettingsView: View {
                                     .opacity(0.77)
                             }
                             
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .imageScale(.small)
-                                .font(.title2)
-                                .foregroundColor(.gray)
+//                            Spacer()
+//                            Image(systemName: "chevron.right")
+//                                .imageScale(.small)
+//                                .font(.title2)
+//                                .foregroundColor(.gray)
                         }
                         .padding(8)
                     }
@@ -59,20 +59,20 @@ struct SettingsView: View {
                         }
                     }
                     
-                    Section("Settings") {
-                        SettingsRowView(imageName: "bell.circle.fill",
-                                        title: "Notifications",
-                                        tintColor: Color(.systemOrange))
-                        
-                        SettingsRowView(imageName: "creditcard.circle.fill",
-                                        title: "Payment Methods",
-                                        tintColor: Color(.systemBlue))
-                    }
+//                    Section("Settings") {
+//                        SettingsRowView(imageName: "bell.circle.fill",
+//                                        title: "Notifications",
+//                                        tintColor: Color(.systemOrange))
+//                        
+//                        SettingsRowView(imageName: "creditcard.circle.fill",
+//                                        title: "Payment Methods",
+//                                        tintColor: Color(.systemBlue))
+//                    }
                     
                     Section("Account") {
-                        SettingsRowView(imageName: "dollarsign.square.fill",
-                                        title: "Become a driver",
-                                        tintColor: Color(.systemGreen))
+//                        SettingsRowView(imageName: "dollarsign.square.fill",
+//                                        title: "Become a driver",
+//                                        tintColor: Color(.systemGreen))
                         
                         SettingsRowView(imageName: "arrow.left.square.fill",
                                         title: "Sign out",

@@ -9,35 +9,45 @@ import SwiftUI
 
 struct OrdersView: View {
     @ObservedObject var viewModel: OrdersViewModel
-    
-    
+    @EnvironmentObject var authViewModel: AuthViewModel
 
     var body: some View {
-            List(viewModel.orders) { order in
-                Section("Order #: \(order.orderId ?? "")") {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text(order.dropoffLocationName)
-                    //Text("Order #: \(order.orderId ?? "")")
-                    Text("Customer Name: \(order.customerName)")
-                    Text("Driver Name: \(order.driverName)")
-                    Text("Order Status: \(order.state)")
-                    Button{
-                        //receipt.receiptImageUrl
-                    } label: {
-                        Text("View receipt")
-                    }
-                    
-                    
-                    // Add more details as needed
+        Text("Order Details")
+            .font(.largeTitle)
+            .bold()
+            .padding()
+        
+        List(viewModel.completedOrders) { order in
+            VStack(alignment: .leading) {
+                Text("Order ID: \(order.orderId ?? "N/A")")
+                Text("Driver Name: \(order.driverName)")
+                Text("Customer Name: \(order.customerName)")
+                Text("Pickup Location: \(order.pickupLocationName)")
+                Text("Dropoff Location: \(order.dropoffLocationName)")
+                Text("Total Cost: \(order.tripCost, specifier: "%.2f")")
+                Button("VIEW RECEIPT") {
+                    viewModel.fetchReceipt(forOrder: order.id)
                 }
-                
-                
             }
         }
-            .navigationTitle("Order Details")
-            .navigationBarTitleDisplayMode(.large)
         .onAppear {
-            viewModel.fetchOrders()
+            if let user = authViewModel.currentUser {
+                viewModel.fetchCompletedOrders(forUser: user)
+            }
+        }
+        .sheet(item: $viewModel.selectedReceipt) { receipt in
+            if let url = URL(string: receipt.receiptImageUrl ?? "") {
+                FullScreenImageView(url: url)
+            } else {
+                Text("Receipt image not available")
+            }
         }
     }
 }
+
+
+
+
+
+
+

@@ -52,6 +52,7 @@
 		CA7BF11B2BA1B48F0015796C /* DriverUploadingReceiptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA7BF11A2BA1B48F0015796C /* DriverUploadingReceiptView.swift */; };
 		CA7BF11D2BA2C43B0015796C /* OrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA7BF11C2BA2C43B0015796C /* OrdersView.swift */; };
 		CA7BF11F2BA2C4600015796C /* OrdersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA7BF11E2BA2C4600015796C /* OrdersViewModel.swift */; };
+		CA7BF1212BA3A2BF0015796C /* OrderRejectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA7BF1202BA3A2BF0015796C /* OrderRejectedView.swift */; };
 		CAC1162B2B92A6D700690E6A /* DashDropApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1162A2B92A6D700690E6A /* DashDropApp.swift */; };
 		CAC1162F2B92A6D800690E6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAC1162E2B92A6D800690E6A /* Assets.xcassets */; };
 		CAC116322B92A6D800690E6A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAC116312B92A6D800690E6A /* Preview Assets.xcassets */; };
@@ -112,6 +113,7 @@
 		CA7BF11A2BA1B48F0015796C /* DriverUploadingReceiptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverUploadingReceiptView.swift; sourceTree = "<group>"; };
 		CA7BF11C2BA2C43B0015796C /* OrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersView.swift; sourceTree = "<group>"; };
 		CA7BF11E2BA2C4600015796C /* OrdersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersViewModel.swift; sourceTree = "<group>"; };
+		CA7BF1202BA3A2BF0015796C /* OrderRejectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRejectedView.swift; sourceTree = "<group>"; };
 		CAC116272B92A6D700690E6A /* DashDrop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DashDrop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAC1162A2B92A6D700690E6A /* DashDropApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashDropApp.swift; sourceTree = "<group>"; };
 		CAC1162E2B92A6D800690E6A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -462,6 +464,7 @@
 		CAE43F2C2B9FDC370007DA21 /* Customers */ = {
 			isa = PBXGroup;
 			children = (
+				CA7BF1202BA3A2BF0015796C /* OrderRejectedView.swift */,
 				CAC1165E2B931F2D00690E6A /* OrderRequestView.swift */,
 				CA0E5DBD2B9A8C9D0013AA83 /* OrderLoadingView.swift */,
 				CA0E5DC32B9AEAF80013AA83 /* PrepaidLabelView.swift */,
@@ -602,6 +605,7 @@
 				CA7BF1192BA19B330015796C /* FullScreenImageView.swift in Sources */,
 				CAC1165A2B92C5A700690E6A /* LocationSearchViewModel.swift in Sources */,
 				CAC116562B92BBD800690E6A /* LocationSearchView.swift in Sources */,
+				CA7BF1212BA3A2BF0015796C /* OrderRejectedView.swift in Sources */,
 				CA7BF11F2BA2C4600015796C /* OrdersViewModel.swift in Sources */,
 				CAC1164C2B92A87900690E6A /* LocationManager.swift in Sources */,
 				CAC116B52B955E4000690E6A /* SideMenuView.swift in Sources */,

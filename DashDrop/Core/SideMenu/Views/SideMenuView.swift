@@ -48,15 +48,15 @@ struct SideMenuView: View {
                             .font(.footnote)
                             .fontWeight(.semibold)
                         
-                        NavigationLink(destination: RegistrationViewDriver()) {
-                            HStack {
-                                Image(systemName: "dollarsign.square")
-                                    .font(.title2)
-                                    .imageScale(.medium)
-                                
-                                Text("Become A Driver ")
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .padding(6)
+                        if user.accountType == .customer {
+                            NavigationLink(destination: RegistrationViewDriver()) {
+                                accountActionView(iconName: "car", text: "Become A Driver")
+                            }
+                        } else {
+                            Button(action: {
+                                viewModel.signout()
+                            }) {
+                                accountActionView(iconName: "person.crop.circle", text: "Switch to Customer Account")
                             }
                         }
                     }
@@ -89,12 +89,26 @@ struct SideMenuView: View {
                         SettingsView(user: user)
                     case .messages:
                         Text("Messages")
+//                    case .switchAccount:
+//                        Text("Switch Account")
                     }
                 }
                 
                 Spacer()
             }
             .padding(.top, 32)
+        }
+    }
+    
+    private func accountActionView(iconName: String, text: String) -> some View {
+        HStack {
+            Image(systemName: iconName)
+                .font(.title2)
+                .imageScale(.medium)
+            
+            Text(text)
+                .font(.system(size: 16, weight: .semibold))
+                .padding(6)
         }
     }
 }

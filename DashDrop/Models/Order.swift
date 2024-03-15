@@ -21,7 +21,7 @@ enum OrderState: Int, Codable {
 struct Order: Identifiable, Codable {
     @DocumentID var orderId: String?
     let customerUid: String
-    let driverUid: String
+    var driverUid: String
     let customerName: String
     let driverName: String
     let customerLocation: GeoPoint
@@ -39,6 +39,8 @@ struct Order: Identifiable, Codable {
     var qrcodeImageUrl: String? 
     let selectedLabelOption: String
     let packageType: String
+    var isCompletedForCustomer: Bool = false
+    var isCompletedForDriver: Bool = false
     
     var id: String {
         return orderId ?? ""

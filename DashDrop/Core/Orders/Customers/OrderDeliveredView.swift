@@ -71,7 +71,11 @@ struct OrderDeliveredView: View {
                     Spacer()
 
                     Button {
-                        presentationMode.wrappedValue.dismiss()
+                        if let orderId = order.orderId {
+                                viewModel.markOrderAsCompletedForCustomer(orderId: orderId)
+                                viewModel.resetOrderAndUserState()
+                            }
+                            self.presentationMode.wrappedValue.dismiss()
                     } label: {
                         Text("DONE")
                             .font(.headline)
