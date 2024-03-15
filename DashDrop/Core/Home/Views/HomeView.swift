@@ -47,16 +47,18 @@ extension HomeView {
                 MapViewRepresentable(mapState: $mapState)
                     .ignoresSafeArea()
                 
-                if mapState == .searchingForLocation {
-                    LocationSearchView()
-                } else if mapState == .noInput {
-                    LocationSearchActivationView()
-                        .padding(.top, 88)
-                        .onTapGesture {
-                            withAnimation(.spring()) {
-                                mapState = .searchingForLocation
+                if !(authViewModel.currentUser?.accountType == .driver) {
+                    if mapState == .searchingForLocation {
+                        LocationSearchView()
+                    } else if mapState == .noInput {
+                        LocationSearchActivationView()
+                            .padding(.top, 88)
+                            .onTapGesture {
+                                withAnimation(.spring()) {
+                                    mapState = .searchingForLocation
+                                }
                             }
-                        }
+                    }
                 }
                 
                 MapViewActionButton(mapState: $mapState, showSideMenu: $showSideMenu)
@@ -122,7 +124,7 @@ extension HomeView {
             }
         }
         .onReceive(homeViewModel.$order) { order in
-            guard let order = order, !order.isCompletedForCustomer, !order.isCompletedForDriver else {
+            guard let order = order, !order.isCompletedForCustomer, !order.isCompletedForDriver, !order.isRejectedForCustomer, !order.isRejectedForDriver else {
                     // Reset to the initial state if the order is nil or completed
                     withAnimation(.spring()) {
                         self.mapState = .noInput

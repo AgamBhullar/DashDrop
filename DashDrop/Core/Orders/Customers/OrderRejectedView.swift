@@ -29,12 +29,12 @@ struct OrderRejectedView: View {
                 .padding()
                 Button {
                     if let orderId = order.orderId {
-                            viewModel.markOrderAsCompletedForCustomer(orderId: orderId)
+                            viewModel.markOrderAsRejectedForCustomer(orderId: orderId)
                             viewModel.resetOrderAndUserState()
                         }
                         self.presentationMode.wrappedValue.dismiss()
                 } label: {
-                    Text("DONE")
+                    Text("Done")
                         .font(.headline)
                         .fontWeight(.bold)
                         .padding()

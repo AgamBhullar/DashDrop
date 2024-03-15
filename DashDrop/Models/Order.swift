@@ -41,6 +41,8 @@ struct Order: Identifiable, Codable {
     let packageType: String
     var isCompletedForCustomer: Bool = false
     var isCompletedForDriver: Bool = false
+    var isRejectedForCustomer: Bool = false
+    var isRejectedForDriver: Bool = false
     
     var id: String {
         return orderId ?? ""

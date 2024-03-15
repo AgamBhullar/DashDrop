@@ -91,6 +91,8 @@ extension HomeViewModel {
             .whereField("customerUid", isEqualTo: currentUser.uid)
             .whereField("isCompletedForCustomer", isEqualTo: false)
             .whereField("isCompletedForDriver", isEqualTo: false)
+            .whereField("isRejectedForCustomer", isEqualTo: false)
+            .whereField("isRejectedForDriver", isEqualTo: false)
             .addSnapshotListener { snapshot, _ in
                 guard let change = snapshot?.documentChanges.first,
                         change.type == .added
@@ -113,90 +115,29 @@ extension HomeViewModel {
         }
     }
     
-//    func requestOrder() {
-//        guard let driver = drivers.first,
-//              let currentUser = currentUser,
-//              let dropoffLocation = selectedDashDropLocation,
-//              let currentLocation = LocationManager.shared.userLocation,
-//              let selectedPackage = selectedPackageType else { return }
-//        
-//
-//        let dropoffGeoPoint = GeoPoint(latitude: dropoffLocation.coordinate.latitude, longitude: dropoffLocation.coordinate.longitude)
-//        let pickupGeoPoint = GeoPoint(latitude: currentLocation.latitude, longitude: currentLocation.longitude)
-//
-//        let userLocation = CLLocation(latitude: currentLocation.latitude, longitude: currentLocation.longitude)
-//
-//        getPlacemark(forLocation: userLocation) { [weak self] placemark, error in
-//            guard let self = self, let placemark = placemark else { return }
-//            let tripCost = self.computeRidePrice(forType: .box)
-//            
-//            // Determine the pickup location name and address from the placemark
-//            let pickupLocationName = placemark.name ?? "Current Location"
-//            let pickupLocationAddress = self.addressFromPlacemark(placemark)
-//            let deliveryLocationAddress = self.deliveryAddressFromPlacemark(placemark)
-//            
-//            // Check if there is an image to be uploaded
-//            if let selectedImage = self.selectedQRCodeImage {
-//                // Upload image then get the URL
-//                ImageUploader.uploadImage(image: selectedImage) { imageUrl in
-//                    // Create the Order with the image URL
-//                    
-//                    let order = Order(
-//                        customerUid: currentUser.uid,
-//                        driverUid: driver.uid,
-//                        customerName: currentUser.fullname,
-//                        driverName: driver.fullname,
-//                        customerLocation: GeoPoint(latitude: currentLocation.latitude, longitude: currentLocation.longitude), // Use current location for customerLocation
-//                        driverLocation: driver.coordinates,
-//                        pickupLocationName: pickupLocationName,
-//                        dropoffLocationName: dropoffLocation.title,
-//                        pickupLocationAddress: pickupLocationAddress,
-//                        deliveryLocationAddress: deliveryLocationAddress,
-//                        pickupLocation: pickupGeoPoint, // Use GeoPoint created from current location
-//                        dropoffLocation: dropoffGeoPoint,
-//                        tripCost: tripCost,
-//                        distanceToCustomer: 0,
-//                        travelTimeToCustomer: 0,
-//                        state: .requested,
-//                        qrcodeImageUrl: imageUrl, // Include the image URL if available
-//                        selectedLabelOption: "The customer uploaded an image of the QR code",
-//                        packageType: selectedPackage.description
-//                    )
-//                    
-//                    // Now upload order data including the image URL
-//                    self.uploadOrderData(order)
-//                    print("DEBUG: Trip is \(order)")
-//                }
-//            } else {
-//                // No image, proceed with order creation without image URL
-//                let order = Order(
-//                    customerUid: currentUser.uid,
-//                    driverUid: driver.uid,
-//                    customerName: currentUser.fullname,
-//                    driverName: driver.fullname,
-//                    customerLocation: GeoPoint(latitude: currentLocation.latitude, longitude: currentLocation.longitude), // Use current location for customerLocation
-//                    driverLocation: driver.coordinates,
-//                    pickupLocationName: pickupLocationName,
-//                    dropoffLocationName: dropoffLocation.title,
-//                    pickupLocationAddress: pickupLocationAddress,
-//                    deliveryLocationAddress: deliveryLocationAddress,
-//                    pickupLocation: pickupGeoPoint, // Use GeoPoint created from current location
-//                    dropoffLocation: dropoffGeoPoint,
-//                    tripCost: tripCost,
-//                    distanceToCustomer: 0,
-//                    travelTimeToCustomer: 0,
-//                    state: .requested,
-//                    selectedLabelOption: "The customer selected the prepaid label option.",
-//                    packageType: selectedPackage.description
-//                )
-//                
-//                // Now upload order data without the image URL
-//                print("DEBUG: Trip is \(order)")
-//                self.uploadOrderData(order)
-//            }
-//        }
-//    }
-
+    func markOrderAsRejectedForCustomer(orderId: String) {
+        Firestore.firestore().collection("orders").document(orderId).updateData(["isRejectedForCustomer": true]) { error in
+            if let error = error {
+                print("DEBUG: Error marking order as rejected: \(error.localizedDescription)")
+            } else {
+                print("DEBUG: Order marked as rejected successfully.")
+                // After marking as completed, you may want to reset the local app state
+                self.resetOrderAndUserState()
+            }
+        }
+    }
+    
+    func markOrderAsCompletedForCustomer(orderId: String) {
+        Firestore.firestore().collection("orders").document(orderId).updateData(["isCompletedForCustomer": true]) { error in
+            if let error = error {
+                print("DEBUG: Error marking order as completed: \(error.localizedDescription)")
+            } else {
+                print("DEBUG: Order marked as completed successfully.")
+                // After marking as completed, you may want to reset the local app state
+                self.resetOrderAndUserState()
+            }
+        }
+    }
     
     func requestOrder() {
         guard let currentUser = currentUser,
@@ -249,7 +190,7 @@ extension HomeViewModel {
         }
     }
 
-    private func createOrder(currentUser: User, driver: User, pickupLocationName: String, dropoffLocation: DashDropLocation, pickupLocationAddress: String, deliveryLocationAddress: String, pickupGeoPoint: GeoPoint, dropoffGeoPoint: GeoPoint, tripCost: Double, imageUrl: String?, selectedPackage: PackageType, isCompletedForCustomer: Bool = false, isCompletedForDriver: Bool = false) -> Order {
+    private func createOrder(currentUser: User, driver: User, pickupLocationName: String, dropoffLocation: DashDropLocation, pickupLocationAddress: String, deliveryLocationAddress: String, pickupGeoPoint: GeoPoint, dropoffGeoPoint: GeoPoint, tripCost: Double, imageUrl: String?, selectedPackage: PackageType, isCompletedForCustomer: Bool = false, isCompletedForDriver: Bool = false, isRejectedForCustomer: Bool = false, isRejectedForDriver: Bool = false) -> Order {
         return Order(
             customerUid: currentUser.uid,
             driverUid: driver.uid,
@@ -271,7 +212,9 @@ extension HomeViewModel {
             selectedLabelOption: imageUrl != nil ? "The customer uploaded an image of the QR code" : "The customer selected the prepaid label option.",
             packageType: selectedPackage.description,
             isCompletedForCustomer: isCompletedForCustomer,
-            isCompletedForDriver: isCompletedForDriver
+            isCompletedForDriver: isCompletedForDriver,
+            isRejectedForCustomer: isRejectedForCustomer,
+            isRejectedForDriver: isRejectedForDriver
         )
     }
 
@@ -420,12 +363,12 @@ extension HomeViewModel {
         }
     }
     
-    func markOrderAsCompletedForCustomer(orderId: String) {
-        Firestore.firestore().collection("orders").document(orderId).updateData(["isCompletedForCustomer": true]) { error in
+    func markOrderAsRejectedForDriver(orderId: String) {
+        Firestore.firestore().collection("orders").document(orderId).updateData(["isRejectedForDriver": true]) { error in
             if let error = error {
-                print("DEBUG: Error marking order as completed: \(error.localizedDescription)")
+                print("DEBUG: Error marking order as rejected: \(error.localizedDescription)")
             } else {
-                print("DEBUG: Order marked as completed successfully.")
+                print("DEBUG: Order marked as rejected successfully.")
                 // After marking as completed, you may want to reset the local app state
                 self.resetOrderAndUserState()
             }

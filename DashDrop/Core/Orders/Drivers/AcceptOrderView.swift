@@ -155,7 +155,7 @@ struct AcceptOrderView: View {
                     Button {
                         viewModel.rejectOrder()
                         if let orderId = order.orderId {
-                                viewModel.markOrderAsCompletedForDriver(orderId: orderId)
+                                viewModel.markOrderAsRejectedForDriver(orderId: orderId)
                                 viewModel.resetDriverState()
                             }
                             self.presentationMode.wrappedValue.dismiss()
