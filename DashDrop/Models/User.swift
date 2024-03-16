@@ -21,6 +21,7 @@ struct User: Codable {
     var homeLocation: SavedLocation?
     var workLocation: SavedLocation?
     
+    
     var initials: String {
         let formatter = PersonNameComponentsFormatter()
         if let components = formatter.personNameComponents(from: fullname) {

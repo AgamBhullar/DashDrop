@@ -12,6 +12,7 @@ import Combine
 import MapKit
 
 class HomeViewModel: NSObject, ObservableObject {
+    static let shared = HomeViewModel() 
     
     // MARK: - Properties
     
@@ -46,6 +47,7 @@ class HomeViewModel: NSObject, ObservableObject {
     override init() {
         super.init()
         fetchUser()
+        listenForDriverLocationUpdates()
         
         searchCompleter.delegate = self
         searchCompleter.queryFragment = queryFragment
@@ -58,7 +60,6 @@ class HomeViewModel: NSObject, ObservableObject {
             .sink { user in
                 guard let user = user else { return }
                 self.currentUser = user
-                //self.currentUser = user
                 
                 if user.accountType == .customer {
                     self.fetchDrivers()
@@ -74,6 +75,29 @@ class HomeViewModel: NSObject, ObservableObject {
 // MARK: - Customer API
 
 extension HomeViewModel {
+    
+    func listenForDriverLocationUpdates() {
+        Firestore.firestore().collection("users")
+            .whereField("accountType", isEqualTo: AccountType.driver.rawValue)
+            .addSnapshotListener { snapshot, error in
+                guard let snapshot = snapshot else {
+                    print("Error fetching driver updates: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                
+                snapshot.documentChanges.forEach { change in
+                    if change.type == .modified {
+                        if let updatedDriver = try? change.document.data(as: User.self) {
+                            if let index = self.drivers.firstIndex(where: { $0.uid == updatedDriver.uid }) {
+                                self.drivers[index] = updatedDriver
+                            } else {
+                                self.drivers.append(updatedDriver)
+                            }
+                        }
+                    }
+                }
+            }
+    }
     
     func resetOrderAndUserState() {
             self.order = nil

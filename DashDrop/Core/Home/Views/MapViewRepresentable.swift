@@ -156,9 +156,19 @@ extension MapViewRepresentable {
             
         }
         
+//        func addDriversToMap(_ drivers: [User]) {
+//            let annotations = drivers.map({ DriverAnnotation(driver: $0) })
+//            self.parent.mapView.addAnnotations(annotations)
+//        }
+        
         func addDriversToMap(_ drivers: [User]) {
-            let annotations = drivers.map({ DriverAnnotation(driver: $0) })
-            self.parent.mapView.addAnnotations(annotations)
+            // First, remove existing driver annotations
+            let existingAnnotations = parent.mapView.annotations.filter { $0 is DriverAnnotation }
+            parent.mapView.removeAnnotations(existingAnnotations)
+            
+            // Then, add new annotations for each driver
+            let annotations = drivers.map { DriverAnnotation(driver: $0) }
+            parent.mapView.addAnnotations(annotations)
         }
     }
 }
