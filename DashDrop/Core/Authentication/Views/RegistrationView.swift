@@ -23,84 +23,96 @@ struct RegistrationView: View {
             Color(.black)
                 .ignoresSafeArea()
             
-            VStack(alignment: .leading, spacing: 20) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "arrow.left")
-                        .font(.title)
-                        .foregroundColor(Color("CustomColor1"))
-                        .imageScale(.medium)
-                        .padding()
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 20) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "arrow.left")
+                            .font(.title)
+                            .foregroundColor(Color("CustomColor1"))
+                            .imageScale(.medium)
+                            .padding()
                         
-                }
-                
-                Text("Create new account")
-                    .font(.system(size: 40))
-                    .fontWeight(.semibold)
-                    .multilineTextAlignment(.leading)
-                    .frame(width: 250)
-                
-                
-                Spacer()
-                
-                VStack {
-                    VStack(spacing: 40) {
-                        CustomInputField(text: $fullname, title: "Full Name", placeholder: "Enter your name")
-                        
-                        CustomInputField(text: $email, title: "Email Address", placeholder: "name@example.com")
-                            .autocapitalization(.none)
-                        
-                        CustomInputField(text: $password, title: "Create Password", placeholder: "Enter your password", isSecureField: true)
-                        
-                        CustomInputField(text: $password, title: "Confirm Password", placeholder: "Confirm your password", isSecureField: true)
-                        if !password.isEmpty && !confirmPassword.isEmpty {
-                            if password == confirmPassword {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .imageScale(.large)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color(.systemGreen))
-                            } else {
-                                Image(systemName: "xmark.circle.fill")
-                                    .imageScale(.large)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color(.systemRed))
+                    }
+                    
+                    Text("Create new account")
+                        .font(.system(size: 40))
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.leading)
+                        .frame(width: 250)
+                    
+                    
+                    Spacer()
+                    
+                    VStack {
+                        VStack(spacing: 40) {
+                            CustomInputField(text: $fullname, title: "Full Name", placeholder: "Enter your name")
+                            
+                            CustomInputField(text: $email, title: "Email Address", placeholder: "name@example.com")
+                                .autocapitalization(.none)
+                            
+                            CustomInputField(text: $password, title: "Create Password", placeholder: "Enter your password", isSecureField: true)
+                            
+                            ZStack(alignment: .trailing) {
+                                CustomInputField(text: $confirmPassword, title: "Confirm Password", placeholder: "Confirm your password", isSecureField: true)
+                                if !password.isEmpty && !confirmPassword.isEmpty {
+                                    if password == confirmPassword {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .imageScale(.large)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(Color(.systemGreen))
+                                    } else {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .imageScale(.large)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(Color(.systemRed))
+                                    }
+                                }
                             }
                         }
-                    }
-                    .padding(.leading)
-                    
-                    Spacer()
-                    
-                    Button {
-                        viewModel.registerUser(withEmail: email, 
-                                               password: password,
-                                               fullname: fullname)
+                        .padding(.leading)
+                        
+                        Spacer()
+                        
+                        Button {
+                            viewModel.registerUser(withEmail: email, 
+                                                   password: password,
+                                                   fullname: fullname)
                             //self.showingSuccessAlert = true
-                    } label: {
-                        HStack {
-                            Text("SIGN UP")
-                                .foregroundColor(.black)
-                            
-                            Image(systemName: "arrow.right")
-                                .foregroundColor(.black)
+                        } label: {
+                            HStack {
+                                Text("SIGN UP")
+                                    .foregroundColor(.black)
+                                
+                                Image(systemName: "arrow.right")
+                                    .foregroundColor(.black)
+                            }
+                            .frame(width: UIScreen.main.bounds.width - 32, height: 50)
+                            .scaleEffect(animate ? 1.1 : 1.0)
                         }
-                        .frame(width: UIScreen.main.bounds.width - 32, height: 50)
-                        .scaleEffect(animate ? 1.1 : 1.0)
-                    }
-                    .background(Color("CustomColor1"))
-                    .disabled(!formIsValid)
-                    .opacity(formIsValid ? 1.0 : 0.5)
-                    .cornerRadius(10)
-                    .padding(.top, 24)
-                    .onAppear {
-                        withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
-                            animate = true
+                        .background(Color("CustomColor1"))
+                        .disabled(!formIsValid)
+                        .opacity(formIsValid ? 1.0 : 0.5)
+                        .cornerRadius(10)
+                        .padding(.top, 24)
+                        .onAppear {
+                            withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
+                                animate = true
+                            }
                         }
+                        
+                        Spacer()
                     }
-                    
-                    Spacer()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.clear.onTapGesture {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    })
                 }
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                self.hideKeyboard()
             }
             .foregroundColor(.white)
             .navigationBarBackButtonHidden(true)
@@ -109,6 +121,10 @@ struct RegistrationView: View {
             }
             
         }
+    }
+    
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
     
     private func attemptRegistration() {

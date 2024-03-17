@@ -31,94 +31,106 @@ struct RegistrationViewDriver: View {
             Color(.black)
                 .ignoresSafeArea()
             
-            VStack(alignment: .leading, spacing: 20) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "arrow.left")
-                        .font(.title)
-                        .foregroundColor(Color("CustomColor1"))
-                        .imageScale(.medium)
-                        .padding()
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 20) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "arrow.left")
+                            .font(.title)
+                            .foregroundColor(Color("CustomColor1"))
+                            .imageScale(.medium)
+                            .padding()
                         
-                }
-                
-                Text("Register as a driver")
-                    .font(.system(size: 40))
-                    .fontWeight(.semibold)
-                    .multilineTextAlignment(.leading)
-                    .frame(width: 250)
-                
-                
-                Spacer()
-                
-                VStack {
-                    VStack(spacing: 40) {
-                        CustomInputField(text: $fullname, title: "Full Name", placeholder: "Enter your name")
-                        
-                        CustomInputField(text: $email, title: "Email Address", placeholder: "name@example.com")
-                            .autocapitalization(.none)
-                        
-                        CustomInputField(text: $password, title: "Create Password", placeholder: "Enter your password", isSecureField: true)
-                        
-                        CustomInputField(text: $password, title: "Confirm Password", placeholder: "Confirm your password", isSecureField: true)
-                        if !password.isEmpty && !confirmPassword.isEmpty {
-                            if password == confirmPassword {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .imageScale(.large)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color(.systemGreen))
-                            } else {
-                                Image(systemName: "xmark.circle.fill")
-                                    .imageScale(.large)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color(.systemRed))
-                            }
-                        }
                     }
-                    .padding(.leading)
+                    
+                    Text("Register as a driver")
+                        .font(.system(size: 40))
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.leading)
+                        .frame(width: 250)
+                    
                     
                     Spacer()
                     
-                    Button {
-                        viewModel.registerDriver(withEmail: email,
-                                               password: password, fullname: fullname)
+                    VStack {
+                        VStack(spacing: 40) {
+                            CustomInputField(text: $fullname, title: "Full Name", placeholder: "Enter your name")
+                            
+                            CustomInputField(text: $email, title: "Email Address", placeholder: "name@example.com")
+                                .autocapitalization(.none)
+                            
+                            CustomInputField(text: $password, title: "Create Password", placeholder: "Enter your password", isSecureField: true)
+                            
+                            ZStack(alignment: .trailing) {
+                                CustomInputField(text: $confirmPassword, title: "Confirm Password", placeholder: "Confirm your password", isSecureField: true)
+                                if !password.isEmpty && !confirmPassword.isEmpty {
+                                    if password == confirmPassword {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .imageScale(.large)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(Color(.systemGreen))
+                                    } else {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .imageScale(.large)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(Color(.systemRed))
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.leading)
+                        
+                        Spacer()
+                        
+                        Button {
+                            viewModel.registerDriver(withEmail: email,
+                                                     password: password, fullname: fullname)
                             // This closure is called after successful registration.
                             self.showingSuccessAlert = true
-                    } label: {
-                        HStack {
-                            Text("SIGN UP")
-                                .foregroundColor(.black)
-                            
-                            Image(systemName: "arrow.right")
-                                .foregroundColor(.black)
-                        }
-                        .frame(width: UIScreen.main.bounds.width - 32, height: 50)
-                        .scaleEffect(animate ? 1.1 : 1.0)
-                    }
-                    .background(Color("CustomColor1"))
-                    .disabled(!formIsValid)
-                    .opacity(formIsValid ? 1.0 : 0.5)
-                    .cornerRadius(10)
-                    .padding(.top, 24)
-                    .alert(isPresented: $showingSuccessAlert) {
-                        Alert(
-                            title: Text("Success"),
-                            message: Text("Your driver account has been created successfully."),
-                            dismissButton: .default(Text("OK")) {
-                                // Action to perform when OK is tapped.
-                                dismiss()
+                        } label: {
+                            HStack {
+                                Text("SIGN UP")
+                                    .foregroundColor(.black)
+                                
+                                Image(systemName: "arrow.right")
+                                    .foregroundColor(.black)
                             }
-                        )
-                    }
-                    .onAppear {
-                        withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
-                            animate = true
+                            .frame(width: UIScreen.main.bounds.width - 32, height: 50)
+                            .scaleEffect(animate ? 1.1 : 1.0)
                         }
+                        .background(Color("CustomColor1"))
+                        .disabled(!formIsValid)
+                        .opacity(formIsValid ? 1.0 : 0.5)
+                        .cornerRadius(10)
+                        .padding(.top, 24)
+                        .alert(isPresented: $showingSuccessAlert) {
+                            Alert(
+                                title: Text("Success"),
+                                message: Text("Your driver account has been created successfully."),
+                                dismissButton: .default(Text("OK")) {
+                                    // Action to perform when OK is tapped.
+                                    dismiss()
+                                }
+                            )
+                        }
+                        .onAppear {
+                            withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
+                                animate = true
+                            }
+                        }
+                        
+                        Spacer()
                     }
-                    
-                    Spacer()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.clear.onTapGesture {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    })
                 }
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                self.hideKeyboard()
             }
             .foregroundColor(.white)
             .navigationBarBackButtonHidden(true)
@@ -126,6 +138,9 @@ struct RegistrationViewDriver: View {
                 Alert(title: Text("Registration Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
         }
+    }
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
     
     private func attemptRegistration() {
