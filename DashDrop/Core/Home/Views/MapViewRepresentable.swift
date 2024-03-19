@@ -63,6 +63,7 @@ struct MapViewRepresentable: UIViewRepresentable {
 extension MapViewRepresentable {
     
     class MapCoordinator: NSObject, MKMapViewDelegate {
+        var userIsInteracting = false
         
         //MARK: - Properties
         
@@ -78,17 +79,44 @@ extension MapViewRepresentable {
         }
         
         //MARK: - MKMapViewDelegate
+//        func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+//            self.userLocationCoordinate = userLocation.coordinate
+//            let region = MKCoordinateRegion(
+//                center: CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude,
+//                                               longitude: userLocation.coordinate.longitude),
+//                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+//            )
+//
+//            self.currentRegion = region
+//
+//            parent.mapView.setRegion(region, animated: false)
+//        }
+        
         func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
             self.userLocationCoordinate = userLocation.coordinate
-            let region = MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude,
-                                               longitude: userLocation.coordinate.longitude),
-                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-            )
             
-            self.currentRegion = region
+            // Calculate the distance between the new user location and the current map center
+            let currentMapCenter = CLLocation(latitude: mapView.region.center.latitude, longitude: mapView.region.center.longitude)
+            let newUserLocation = CLLocation(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
             
-            parent.mapView.setRegion(region, animated: true)
+            let distance = currentMapCenter.distance(from: newUserLocation)
+            
+            // Update the map's region only if the user has moved more than 50 meters from the current map center
+            if distance > 50 { // Threshold of 50 meters
+                let region = MKCoordinateRegion(
+                    center: userLocation.coordinate,
+                    span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+                )
+                
+                self.currentRegion = region
+                
+                // Update the region without animation
+                
+                if self.userIsInteracting {
+                    // Only recenter the map if the user is not currently interacting with it
+                    parent.mapView.setRegion(region, animated: true)
+                }
+            }
         }
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -165,6 +193,11 @@ extension MapViewRepresentable {
             // First, remove existing driver annotations
             let existingAnnotations = parent.mapView.annotations.filter { $0 is DriverAnnotation }
             parent.mapView.removeAnnotations(existingAnnotations)
+            
+            // Only proceed if the current user is a driver
+//                guard let currentUser = parent.homeViewModel.currentUser, currentUser.accountType == .driver else {
+//                    return // If not a driver, do not add any driver annotations
+//                }
             
             // Then, add new annotations for each driver
             let annotations = drivers.map { DriverAnnotation(driver: $0) }

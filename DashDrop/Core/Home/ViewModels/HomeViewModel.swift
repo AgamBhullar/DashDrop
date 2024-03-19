@@ -238,11 +238,10 @@ extension HomeViewModel {
             isCompletedForCustomer: isCompletedForCustomer,
             isCompletedForDriver: isCompletedForDriver,
             isRejectedForCustomer: isRejectedForCustomer,
-            isRejectedForDriver: isRejectedForDriver
+            isRejectedForDriver: isRejectedForDriver,
+            creationDate: nil
         )
     }
-
-    // The rest of your methods like `uploadOrderData` remain unchanged.
 
 
     private func uploadOrderData(_ order: Order) {
@@ -302,6 +301,33 @@ extension HomeViewModel {
 //            }
 //    }
     
+    func fetchOrders(completion: @escaping () -> Void) {
+        guard let currentUser = currentUser else { return }
+        
+        Firestore.firestore().collection("orders")
+            .whereField("driverUid", isEqualTo: currentUser.uid)
+            .getDocuments { snapshot, _ in
+                guard let documents = snapshot?.documents, let document = documents.first else {
+                    completion()
+                    return
+                }
+                guard let order = try? document.data(as: Order.self) else {
+                    completion()
+                    return
+                }
+                
+                self.order = order
+                
+                self.getDestinationRoute(from: order.driverLocation.toCoordinate(),
+                                         to: order.pickupLocation.toCoordinate()) { route in
+                    self.order?.travelTimeToCustomer = Int(route.expectedTravelTime / 60)
+                    self.order?.distanceToCustomer = route.distance
+                    completion()
+                }
+            }
+    }
+
+    
     func uploadReceiptImage(forOrder orderID: String, image: UIImage) {
         // First, upload the image
         ImageUploader.uploadImage(image: image) { imageUrl in
@@ -322,7 +348,20 @@ extension HomeViewModel {
         }
     }
     
-    func fetchReceipt(forOrder orderID: String) {
+//    func fetchReceipt(forOrder orderID: String) {
+//        let receiptRef = Firestore.firestore().collection("receipts").document(orderID)
+//        receiptRef.getDocument { (document, error) in
+//            if let document = document, document.exists, let receipt = try? document.data(as: Receipt.self) {
+//                DispatchQueue.main.async {
+//                    self.receipt = receipt
+//                }
+//            } else {
+//                print("Document does not exist or failed to decode: \(error?.localizedDescription ?? "")")
+//            }
+//        }
+//    }
+
+    func fetchReceipt(forOrder orderID: String, completion: @escaping () -> Void) {
         let receiptRef = Firestore.firestore().collection("receipts").document(orderID)
         receiptRef.getDocument { (document, error) in
             if let document = document, document.exists, let receipt = try? document.data(as: Receipt.self) {
@@ -332,6 +371,7 @@ extension HomeViewModel {
             } else {
                 print("Document does not exist or failed to decode: \(error?.localizedDescription ?? "")")
             }
+            completion()
         }
     }
 

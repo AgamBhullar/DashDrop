@@ -106,9 +106,9 @@ extension HomeView {
                         } else if mapState == .orderpredelivery {
                             DriverDeliveredView(order: order)
                                 .transition(.move(edge: .bottom))
-                        }  else if mapState == .orderDelivered  {
+                        }  //else if mapState == .orderDelivered  {
                             //dismiss
-                        }
+                        //}
                     }
                 }
             }
@@ -124,38 +124,85 @@ extension HomeView {
                 self.mapState = .locationSelected
             }
         }
+//        .onReceive(homeViewModel.$order) { order in
+//            guard let order = order, 
+//                    !order.isCompletedForCustomer,
+//                    !order.isCompletedForDriver,
+//                    !order.isRejectedForCustomer,
+//                    !order.isRejectedForDriver else {
+//                    // Reset to the initial state if the order is nil or completed
+//                    withAnimation(.spring()) {
+//                        self.mapState = .noInput
+//                    }
+//                    return
+//                }
+//            
+//            withAnimation(.spring()) {
+//                switch order.state {
+//                case .requested:
+//                    self.mapState = .orderRequested
+//                case .rejected:
+//                    self.mapState = .orderRejected
+//                case .accepted:
+//                    self.mapState = .orderAccepted
+//                case .customerCancelled:
+//                    print("DEBUG: Customer cancelled")
+//                case .driverCancelled:
+//                    print("DEBUG: Driver cancelled")
+//                case .predeliver:
+//                    self.mapState = .orderpredelivery
+//                    if homeViewModel.receipt == nil {
+//                        homeViewModel.fetchReceipt(forOrder: order.id) { }
+//                    }
+//                case .delivered:
+//                    self.mapState = .orderDelivered
+//                    
+//                }
+//            }
+//        }
+        
         .onReceive(homeViewModel.$order) { order in
-            guard let order = order, !order.isCompletedForCustomer, !order.isCompletedForDriver, !order.isRejectedForCustomer, !order.isRejectedForDriver else {
-                    // Reset to the initial state if the order is nil or completed
-                    withAnimation(.spring()) {
-                        self.mapState = .noInput
-                    }
-                    return
+            guard let order = order else {
+                // If there's no order, reset to the initial state
+                withAnimation(.spring()) {
+                    self.mapState = .noInput
                 }
+                return
+            }
             
-            withAnimation(.spring()) {
-                switch order.state {
-                case .requested:
-                    self.mapState = .orderRequested
-                case .rejected:
-                    self.mapState = .orderRejected
-                case .accepted:
-                    self.mapState = .orderAccepted
-                case .customerCancelled:
-                    print("DEBUG: Customer cancelled")
-                case .driverCancelled:
-                    print("DEBUG: Driver cancelled")
-                case .predeliver:
-                    self.mapState = .orderpredelivery
-                    if homeViewModel.receipt == nil {
-                        homeViewModel.fetchReceipt(forOrder: order.id)
+            if !order.isCompletedForDriver && !order.isRejectedForCustomer && !order.isRejectedForDriver {
+                withAnimation(.spring()) {
+                    switch order.state {
+                    case .requested:
+                        self.mapState = .orderRequested
+                    case .rejected:
+                        self.mapState = .orderRejected
+                    case .accepted:
+                        self.mapState = .orderAccepted
+                    case .customerCancelled, .driverCancelled:
+                        // Handle cancellation if necessary
+                        break
+                    case .predeliver:
+                        self.mapState = .orderpredelivery
+                    case .delivered:
+                        // Keep showing OrderDeliveredView if the order is delivered but not yet completed by the customer
+                        self.mapState = .orderDelivered
                     }
-                case .delivered:
+                }
+            } else if order.isCompletedForDriver && !order.isCompletedForCustomer {
+                // Keep showing OrderDeliveredView if the driver has completed the order but the customer hasn't yet
+                withAnimation(.spring()) {
                     self.mapState = .orderDelivered
-                    
+                }
+            } else if order.isCompletedForCustomer {
+                // Reset to the initial state once the customer marks the order as completed
+                withAnimation(.spring()) {
+                    self.mapState = .noInput
                 }
             }
         }
+
+        
     }
 }
 

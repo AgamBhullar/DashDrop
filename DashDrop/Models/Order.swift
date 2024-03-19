@@ -43,8 +43,15 @@ struct Order: Identifiable, Codable {
     var isCompletedForDriver: Bool = false
     var isRejectedForCustomer: Bool = false
     var isRejectedForDriver: Bool = false
+    @ServerTimestamp var creationDate: Timestamp?
     
     var id: String {
         return orderId ?? ""
+    }
+}
+
+extension Order {
+    var formattedCreationDate: String {
+        creationDate?.dateValue().formatted() ?? "N/A"
     }
 }

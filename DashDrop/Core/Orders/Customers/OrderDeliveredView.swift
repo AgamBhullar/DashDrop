@@ -47,8 +47,9 @@ struct OrderDeliveredView: View {
 
                 HStack {
                     Button(action: {
-                        viewModel.fetchReceipt(forOrder: order.id)
-                        self.isShowingFullScreenImage = true
+                        viewModel.fetchReceipt(forOrder: order.id) {
+                            self.isShowingFullScreenImage = true
+                        }
                     }) {
                         Text("VIEW RECEIPT")
                             .font(.headline)

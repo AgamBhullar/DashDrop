@@ -16,9 +16,13 @@ struct OrderLoadingView: View {
                 .padding(.top, 8)
             
             HStack {
+                VStack {
                     Text("Order Requested")
                         .font(.headline)
-                    
+                    Text("Please DO NOT restart your app while delivery is in progress!")
+                        .font(.headline)
+                        .foregroundColor(Color(.systemRed))
+                }
 //                    Text("Finding a driver.. ")
 //                        .font(.headline)
             

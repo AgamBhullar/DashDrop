@@ -16,7 +16,7 @@ enum LocationResultsViewConfig {
 
 class LocationSearchViewModel: NSObject, ObservableObject {
     
-    //Mark: -Properties
+    //MARK: -Properties
     
     @Published var results = [MKLocalSearchCompletion]()
     @Published var selectedDashDropLocation: DashDropLocation?
