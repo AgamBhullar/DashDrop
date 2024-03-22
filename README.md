@@ -7,9 +7,13 @@
 - You can either sign up for a new customer account and then create a new driver account once you're logged in as a customer.
 - Or you can use our pre registered accounts below:
 Customer Account log in email: asbhullar@ucdavis.edu
+
 Customer Account log in password: Bhullar1!
+
 Driver Account log in email: test1@gmail.com
+
 Driver Account log in password: 123456
+
                                     
 #DashDrop is a sophisticated SwiftUI application that facilitates the easy handling of package deliveries. Incorporating features like phone number
 authentication, map-based address search, and user profile management, it offers a seamless experience for both sending and receiving packages.This not only
