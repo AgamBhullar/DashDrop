@@ -16,15 +16,13 @@ class OrdersViewModel: ObservableObject {
 
     // Assuming `currentUser` is available and correctly set
     func fetchCompletedOrders(forUser user: User) {
-        let completedField = user.accountType == .customer ? "isCompletedForCustomer" : "isCompletedForDriver"
         var query = db.collection("orders")
-                        .whereField(completedField, isEqualTo: true)
+                            .whereField("isCompletedForDriver", isEqualTo: true)
 
-        if user.accountType == .customer {
-            query = query.whereField("customerUid", isEqualTo: user.uid)
-        } else {
-            query = query.whereField("driverUid", isEqualTo: user.uid)
-        }
+            // If user is a customer, additionally filter orders by the customer's UID.
+            if user.accountType == .customer {
+                query = query.whereField("customerUid", isEqualTo: user.uid)
+            }
 
         query.addSnapshotListener { querySnapshot, error in
             guard let documents = querySnapshot?.documents else {

@@ -80,6 +80,7 @@
 		CAC116B72B96635700690E6A /* SideMenuOptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC116B62B96635700690E6A /* SideMenuOptionViewModel.swift */; };
 		CAC116B92B96652800690E6A /* SideMenuOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC116B82B96652800690E6A /* SideMenuOptionView.swift */; };
 		CAC116BC2B96BA5700690E6A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC116BB2B96BA5700690E6A /* SettingsView.swift */; };
+		CAC94E8B2BAE2D5B00E2B778 /* OrderCancelledView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC94E8A2BAE2D5B00E2B778 /* OrderCancelledView.swift */; };
 		CAE092BE2BA432DC0022828B /* LaunchScreenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE092BD2BA432DC0022828B /* LaunchScreenManager.swift */; };
 		CAE092C22BA434200022828B /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE092C12BA434200022828B /* LaunchScreenView.swift */; };
 		CAE092C52BA4C8D30022828B /* PasswordResetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE092C42BA4C8D30022828B /* PasswordResetView.swift */; };
@@ -145,6 +146,7 @@
 		CAC116B62B96635700690E6A /* SideMenuOptionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuOptionViewModel.swift; sourceTree = "<group>"; };
 		CAC116B82B96652800690E6A /* SideMenuOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuOptionView.swift; sourceTree = "<group>"; };
 		CAC116BB2B96BA5700690E6A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		CAC94E8A2BAE2D5B00E2B778 /* OrderCancelledView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCancelledView.swift; sourceTree = "<group>"; };
 		CAE092BD2BA432DC0022828B /* LaunchScreenManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchScreenManager.swift; sourceTree = "<group>"; };
 		CAE092C12BA434200022828B /* LaunchScreenView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		CAE092C32BA436C10022828B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -371,6 +373,7 @@
 		CAC1165D2B931EF700690E6A /* Orders */ = {
 			isa = PBXGroup;
 			children = (
+				CAC94E892BAE2D4100E2B778 /* Shared */,
 				CAE43F2D2B9FDC390007DA21 /* Drivers */,
 				CAE43F2C2B9FDC370007DA21 /* Customers */,
 			);
@@ -469,6 +472,14 @@
 				CAFCEC562B97B8FB005F67DA /* SavedModelViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		CAC94E892BAE2D4100E2B778 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				CAC94E8A2BAE2D5B00E2B778 /* OrderCancelledView.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		CAE092BA2BA432C10022828B /* LaunchScreen */ = {
@@ -644,6 +655,7 @@
 				CA7BF1212BA3A2BF0015796C /* OrderRejectedView.swift in Sources */,
 				CA7BF11F2BA2C4600015796C /* OrdersViewModel.swift in Sources */,
 				CAC1164C2B92A87900690E6A /* LocationManager.swift in Sources */,
+				CAC94E8B2BAE2D5B00E2B778 /* OrderCancelledView.swift in Sources */,
 				CAC116B52B955E4000690E6A /* SideMenuView.swift in Sources */,
 				CAC116702B93CD6E00690E6A /* RegistrationView.swift in Sources */,
 				CAFCEC5D2B97D7D4005F67DA /* SavedLocation.swift in Sources */,

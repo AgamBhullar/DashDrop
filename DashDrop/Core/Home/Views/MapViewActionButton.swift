@@ -42,7 +42,9 @@ struct MapViewActionButton: View {
                 .orderAccepted,
                 .orderRequested,
                 .orderpredelivery,
-                .orderDelivered:
+                .orderDelivered,
+                .orderCancelledByDriver,
+                .orderCancelledByCustomer:
             mapState = .noInput
             viewModel.selectedDashDropLocation = nil
         }
@@ -59,7 +61,9 @@ struct MapViewActionButton: View {
                 .orderAccepted,
                 .orderpredelivery,
                 .orderDelivered,
-                .orderRequested:
+                .orderRequested,
+                .orderCancelledByDriver,
+                .orderCancelledByCustomer:
             return "arrow.left"
         default:
             return "line.3.horizontal"

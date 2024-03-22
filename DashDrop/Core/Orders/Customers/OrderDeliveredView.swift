@@ -11,6 +11,7 @@ import Kingfisher
 struct OrderDeliveredView: View {
     @EnvironmentObject var viewModel: HomeViewModel
     @State private var isShowingFullScreenImage = false
+    @State private var isLoadingReceipt = false
     @Environment(\.presentationMode) var presentationMode
     let order: Order
 
@@ -28,7 +29,7 @@ struct OrderDeliveredView: View {
                         .fontWeight(.bold)
                         .lineLimit(2)
                         .multilineTextAlignment(.center)
-                        .font(.system(size: 25))
+                        .font(.system(size: 20))
                         .padding()
                     
                     Spacer()
@@ -47,25 +48,35 @@ struct OrderDeliveredView: View {
 
                 HStack {
                     Button(action: {
+                        isLoadingReceipt = true
                         viewModel.fetchReceipt(forOrder: order.id) {
-                            self.isShowingFullScreenImage = true
+                            DispatchQueue.main.async {
+                                isLoadingReceipt = false
+                                self.isShowingFullScreenImage = true
+                            }
                         }
                     }) {
-                        Text("VIEW RECEIPT")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .padding()
-                            .frame(height: 56)
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                        if isLoadingReceipt {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .frame(height: 56) // Matching the button height for alignment
+                        }  else {
+                            Text("VIEW RECEIPT")
+                                .font(.headline)
+                                .fontWeight(.bold)
+                                .padding()
+                                .frame(height: 56)
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
                     }
-                    //.disabled(viewModel.receipt?.receiptImageUrl == nil)
+                    .disabled(isLoadingReceipt)
                     .sheet(isPresented: $isShowingFullScreenImage) {
                         if let receiptImageUrl = viewModel.receipt?.receiptImageUrl, let url = URL(string: receiptImageUrl) {
                             FullScreenImageView(url: url)
                         } else {
-                            Text("Receipt image not available")
+                            Text("Please refresh to view the image")
                         }
                     }
                     
@@ -99,14 +110,3 @@ struct OrderDeliveredView: View {
         .shadow(color: Color.theme.secondaryBackgroundColor, radius: 20)
     }
 }
-
-// You might need to update the FullScreenImageView if it's defined elsewhere
-//struct FullScreenImageView: View {
-//    let url: URL
-//
-//    var body: some View {
-//        KFImage(url)
-//            .resizable()
-//            .scaledToFit()
-//    }
-//}

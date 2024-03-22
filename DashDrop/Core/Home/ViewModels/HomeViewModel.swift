@@ -53,6 +53,28 @@ class HomeViewModel: NSObject, ObservableObject {
         searchCompleter.queryFragment = queryFragment
     }
     
+    //MARK: - Helpers
+    
+    var OrderCancelledMessage: String {
+        guard let user = currentUser, let order = order else { return "" }
+        
+        if user.accountType == .customer {
+            if order.state == .driverCancelled {
+                return "Your driver cancelled this order"
+            } else if order.state == .customerCancelled {
+                return "Your order has been cancelled"
+            }
+        } else {
+            if order.state == .driverCancelled {
+                return "Your order has been cancelled"
+            } else if order.state == .customerCancelled {
+                return "The order has been cancelled by the customer"
+            }
+        }
+        
+        return ""
+    }
+    
     //MARK: - User API
     
     func fetchUser() {
@@ -69,6 +91,14 @@ class HomeViewModel: NSObject, ObservableObject {
                 }
             }
             .store(in: &cancellables)
+    }
+    
+    func deleteOrder() {
+        guard let order = order else { return }
+        
+        Firestore.firestore().collection("orders").document(order.id).delete { _ in
+            self.order = nil
+        }
     }
 }
 
@@ -163,7 +193,7 @@ extension HomeViewModel {
         }
     }
     
-    func requestOrder() {
+    func requestOrder(completion: @escaping (Bool) -> Void) {
         guard let currentUser = currentUser,
               let dropoffLocation = selectedDashDropLocation,
               let currentLocation = LocationManager.shared.userLocation,
@@ -204,11 +234,11 @@ extension HomeViewModel {
                 if let selectedImage = self.selectedQRCodeImage {
                     ImageUploader.uploadImage(image: selectedImage) { imageUrl in
                         let order = self.createOrder(currentUser: currentUser, driver: driver, pickupLocationName: pickupLocationName, dropoffLocation: dropoffLocation, pickupLocationAddress: pickupLocationAddress, deliveryLocationAddress: deliveryLocationAddress, pickupGeoPoint: pickupGeoPoint, dropoffGeoPoint: dropoffGeoPoint, tripCost: tripCost, imageUrl: imageUrl, selectedPackage: selectedPackage)
-                        self.uploadOrderData(order)
+                        self.uploadOrderData(order, completion: completion)
                     }
                 } else {
                     let order = self.createOrder(currentUser: currentUser, driver: driver, pickupLocationName: pickupLocationName, dropoffLocation: dropoffLocation, pickupLocationAddress: pickupLocationAddress, deliveryLocationAddress: deliveryLocationAddress, pickupGeoPoint: pickupGeoPoint, dropoffGeoPoint: dropoffGeoPoint, tripCost: tripCost, imageUrl: nil, selectedPackage: selectedPackage)
-                    self.uploadOrderData(order)
+                    self.uploadOrderData(order, completion: completion)
                 }
             }
         }
@@ -244,10 +274,16 @@ extension HomeViewModel {
     }
 
 
-    private func uploadOrderData(_ order: Order) {
-        guard let encodedOrder = try? Firestore.Encoder().encode(order) else { return }
-        Firestore.firestore().collection("orders").document().setData(encodedOrder) { _ in
-            print("DEBUG: Did upload trip to firestore")
+    private func uploadOrderData(_ order: Order, completion: @escaping (Bool) -> Void) {
+        guard let encodedOrder = try? Firestore.Encoder().encode(order) else { return completion(false) }
+        Firestore.firestore().collection("orders").document().setData(encodedOrder) { error in
+            if let error = error {
+                print("DEBUG: Failed to upload order with error \(error)")
+                completion(false)
+            } else {
+                print("DEBUG: Did upload trip to firestore")
+                completion(true)
+            }
         }
     }
     
@@ -280,26 +316,6 @@ extension HomeViewModel {
                 }
         }
     }
-    
-//    func fetchOrders() {
-//        guard let currentUser = currentUser else { return }
-//        
-//        Firestore.firestore().collection("orders")
-//            .whereField("driverUid", isEqualTo: currentUser.uid)
-//            .getDocuments { snapshot, _ in
-//                guard let documents = snapshot?.documents, let document = documents.first else { return }
-//                guard let order = try? document.data(as: Order.self) else { return }
-//                
-//                self.order = order
-//                
-//                self.getDestinationRoute(from: order.driverLocation.toCoordinate(),
-//                                         to: order.pickupLocation.toCoordinate()) { route in
-//                    
-//                    self.order?.travelTimeToCustomer = Int(route.expectedTravelTime / 60)
-//                    self.order?.distanceToCustomer = route.distance
-//                }
-//            }
-//    }
     
     func fetchOrders(completion: @escaping () -> Void) {
         guard let currentUser = currentUser else { return }
@@ -347,19 +363,6 @@ extension HomeViewModel {
             }
         }
     }
-    
-//    func fetchReceipt(forOrder orderID: String) {
-//        let receiptRef = Firestore.firestore().collection("receipts").document(orderID)
-//        receiptRef.getDocument { (document, error) in
-//            if let document = document, document.exists, let receipt = try? document.data(as: Receipt.self) {
-//                DispatchQueue.main.async {
-//                    self.receipt = receipt
-//                }
-//            } else {
-//                print("Document does not exist or failed to decode: \(error?.localizedDescription ?? "")")
-//            }
-//        }
-//    }
 
     func fetchReceipt(forOrder orderID: String, completion: @escaping () -> Void) {
         let receiptRef = Firestore.firestore().collection("receipts").document(orderID)

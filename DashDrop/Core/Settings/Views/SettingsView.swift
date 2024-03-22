@@ -71,10 +71,6 @@ struct SettingsView: View {
 //                    }
                     
                     Section("Account") {
-//                        SettingsRowView(imageName: "dollarsign.square.fill",
-//                                        title: "Become a driver",
-//                                        tintColor: Color(.systemGreen))
-                        
                         SettingsRowView(imageName: "arrow.left.square.fill",
                                         title: "Sign out",
                                         tintColor: Color("CustomColor1"))

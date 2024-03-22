@@ -86,6 +86,12 @@ extension HomeView {
                             OrderRejectedView(order: order)
                                 .transition(.move(edge: .bottom))
                         }
+                    } else if mapState == .orderCancelledByCustomer {
+                        OrderCancelledView()
+                            .transition(.move(edge: .bottom))
+                    } else if mapState == .orderCancelledByDriver {
+                        OrderCancelledView()
+                            .transition(.move(edge: .bottom))
                     } else if mapState == .orderpredelivery {
                         //if homeViewModel.order != nil {
                         DriverUploadingReceiptView()
@@ -102,6 +108,12 @@ extension HomeView {
                                 .transition(.move(edge: .bottom))
                         } else if mapState == .orderAccepted {
                             PickupPackageView(order: order)
+                                .transition(.move(edge: .bottom))
+                        } else if mapState == .orderCancelledByCustomer {
+                            OrderCancelledView()
+                                .transition(.move(edge: .bottom))
+                        } else if mapState == .orderCancelledByDriver {
+                            OrderCancelledView()
                                 .transition(.move(edge: .bottom))
                         } else if mapState == .orderpredelivery {
                             DriverDeliveredView(order: order)
@@ -179,9 +191,10 @@ extension HomeView {
                         self.mapState = .orderRejected
                     case .accepted:
                         self.mapState = .orderAccepted
-                    case .customerCancelled, .driverCancelled:
-                        // Handle cancellation if necessary
-                        break
+                    case .customerCancelled:
+                        self.mapState = .orderCancelledByCustomer
+                    case .driverCancelled:
+                        self.mapState = .orderCancelledByDriver
                     case .predeliver:
                         self.mapState = .orderpredelivery
                     case .delivered:

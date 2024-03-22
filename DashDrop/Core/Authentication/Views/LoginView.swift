@@ -12,6 +12,7 @@ struct LoginView: View {
     @State var password = ""
     @EnvironmentObject var viewModel: AuthViewModel
     @State private var animate = false
+    @State private var showAlert = false
     
     var body: some View {
         NavigationStack {
@@ -144,6 +145,12 @@ struct LoginView: View {
                     self.hideKeyboard()
                 }
             }
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Login Error"), message: Text(viewModel.signInErrorMessage ?? "Unknown error"), dismissButton: .default(Text("OK")))
+        }
+        .onChange(of: viewModel.signInErrorMessage) { newValue in
+            showAlert = newValue != nil
         }
     }
     private func hideKeyboard() {

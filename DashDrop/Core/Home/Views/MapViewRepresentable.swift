@@ -25,11 +25,12 @@ struct MapViewRepresentable: UIViewRepresentable {
         return mapView
     }
     
+    
     func updateUIView(_ uiView: UIViewType, context: Context) {
         switch mapState {
         case .noInput:
             context.coordinator.clearMapViewAndRecenterOnUserLocation()
-            context.coordinator.addDriversToMap(homeViewModel.drivers)
+            context.coordinator.updateAnnotations()
             //print("DEBUG: Drivers in map view \(homeViewModel.drivers)")
             break
         case .searchingForLocation:
@@ -184,24 +185,42 @@ extension MapViewRepresentable {
             
         }
         
-//        func addDriversToMap(_ drivers: [User]) {
-//            let annotations = drivers.map({ DriverAnnotation(driver: $0) })
-//            self.parent.mapView.addAnnotations(annotations)
+//        func addDriversToMap() {
+//            // Remove existing driver annotations
+//            let existingAnnotations = parent.mapView.annotations.filter { $0 is DriverAnnotation }
+//            parent.mapView.removeAnnotations(existingAnnotations)
+//            
+//            // Check if the current user is a driver and logged in
+//            if let currentUser = HomeViewModel.shared.currentUser, currentUser.accountType == .driver, let userLocation = LocationManager.shared.userLocation {
+//                // Create and add annotation for the current driver
+//                let driverAnnotation = DriverAnnotation(driver: currentUser)
+//                driverAnnotation.coordinate = userLocation
+//                DispatchQueue.main.async {
+//                    self.parent.mapView.addAnnotation(driverAnnotation)
+//                }
+//            }
 //        }
         
-        func addDriversToMap(_ drivers: [User]) {
-            // First, remove existing driver annotations
-            let existingAnnotations = parent.mapView.annotations.filter { $0 is DriverAnnotation }
-            parent.mapView.removeAnnotations(existingAnnotations)
-            
-            // Only proceed if the current user is a driver
-//                guard let currentUser = parent.homeViewModel.currentUser, currentUser.accountType == .driver else {
-//                    return // If not a driver, do not add any driver annotations
-//                }
-            
-            // Then, add new annotations for each driver
-            let annotations = drivers.map { DriverAnnotation(driver: $0) }
-            parent.mapView.addAnnotations(annotations)
+        @objc func updateAnnotations() {
+            // Ensure UI updates are performed on the main thread
+            DispatchQueue.main.async {
+                // Remove existing driver annotations to reset the map's state
+                let existingAnnotations = self.parent.mapView.annotations.filter { $0 is DriverAnnotation }
+                self.parent.mapView.removeAnnotations(existingAnnotations)
+                
+                // Check if the current user is a driver and their location is known
+                if let currentUser = HomeViewModel.shared.currentUser,
+                   currentUser.accountType == .driver,
+                   let userLocation = LocationManager.shared.userLocation {
+                    
+                    // Create an annotation for the driver's current location
+                    let driverAnnotation = DriverAnnotation(driver: currentUser)
+                    driverAnnotation.coordinate = userLocation
+                    
+                    // Add the driver's annotation to the map
+                    self.parent.mapView.addAnnotation(driverAnnotation)
+                }
+            }
         }
     }
 }

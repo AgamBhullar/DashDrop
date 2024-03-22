@@ -83,12 +83,12 @@ struct SideMenuView: View {
                     switch viewModel {
                     case .orders:
                         OrdersView(viewModel: OrdersViewModel())
-                    case .wallet:
-                        Text("Wallet")
+//                    case .wallet:
+//                        Text("Wallet")
                     case .settings:
                         SettingsView(user: user)
-                    case .messages:
-                        Text("Messages")
+//                    case .messages:
+//                        Text("Messages")
 //                    case .switchAccount:
 //                        Text("Switch Account")
                     }

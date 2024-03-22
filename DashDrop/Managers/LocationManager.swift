@@ -22,16 +22,6 @@ class LocationManager: NSObject, ObservableObject {
     }
 }
 
-//extension LocationManager: CLLocationManagerDelegate {
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations:
-//        [CLLocation]) {
-//        guard let location = locations.first else { return }
-//        self.userLocation = location.coordinate
-//        //locationManager.stopUpdatingLocation()
-//    }
-//}
-
-
 extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }

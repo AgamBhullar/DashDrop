@@ -12,7 +12,7 @@ struct RegistrationView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var confirmPassword = ""
-    @State private var showingAlert = false
+    @State private var showingSuccessAlert = false
     @State private var alertMessage = ""
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var viewModel: AuthViewModel
@@ -78,7 +78,17 @@ struct RegistrationView: View {
                         Button {
                             viewModel.registerUser(withEmail: email, 
                                                    password: password,
-                                                   fullname: fullname)
+                                                   fullname: fullname) { success in
+                                if success {
+                                    // This closure is called after successful registration and user fetch.
+                                    DispatchQueue.main.async {
+                                        self.showingSuccessAlert = true
+                                    }
+                                } else {
+                                    // Handle registration failure
+                                    print("DEBUG: Failed to register as a user.")
+                                }
+                            }
                             //self.showingSuccessAlert = true
                         } label: {
                             HStack {
@@ -96,6 +106,16 @@ struct RegistrationView: View {
                         .opacity(formIsValid ? 1.0 : 0.5)
                         .cornerRadius(10)
                         .padding(.top, 24)
+                        .alert(isPresented: $showingSuccessAlert) {
+                            Alert(
+                                title: Text("Success"),
+                                message: Text("Your user account has been created successfully."),
+                                dismissButton: .default(Text("OK")) {
+                                    // Action to perform when OK is tapped.
+                                    dismiss()
+                                }
+                            )
+                        }
                         .onAppear {
                             withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
                                 animate = true
@@ -116,10 +136,6 @@ struct RegistrationView: View {
             }
             .foregroundColor(.white)
             .navigationBarBackButtonHidden(true)
-            .alert(isPresented: $showingAlert) {
-                Alert(title: Text("Registration Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-            }
-            
         }
     }
     
@@ -130,18 +146,29 @@ struct RegistrationView: View {
     private func attemptRegistration() {
         if email.isEmpty || !email.contains("@") {
             alertMessage = "Please enter a valid email address."
-            showingAlert = true
+            showingSuccessAlert = true
         } else if password.isEmpty || password.count <= 5 {
             alertMessage = "Password must be at least 5 characters long."
-            showingAlert = true
+            showingSuccessAlert = true
         } else if password != confirmPassword {
             alertMessage = "Passwords must match."
-            showingAlert = true
+            showingSuccessAlert = true
         } else if fullname.isEmpty {
             alertMessage = "Please fill in all fields."
-            showingAlert = true
+            showingSuccessAlert = true
         } else {
-            viewModel.registerUser(withEmail: email, password: password, fullname: fullname)
+            viewModel.registerUser(withEmail: email, password: password, fullname: fullname) { success in
+                DispatchQueue.main.async {
+                    if success {
+                        // Handle successful registration
+                        self.showingSuccessAlert = true
+                    } else {
+                        // Handle registration failure, update alert message and show alert
+                        self.alertMessage = "An error occurred during registration."
+                        self.showingSuccessAlert = true
+                    }
+                }
+            }
         }
     }
 }

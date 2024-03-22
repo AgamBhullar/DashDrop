@@ -30,8 +30,7 @@ struct CustomUITextField: UIViewRepresentable {
     var placeholder: String
     @Binding var text: String
     
-    var placeholderColor: UIColor = .gray // Set your placeholder color here
-    
+    var placeholderColor: UIColor = .gray
     func makeUIView(context: Context) -> UITextField {
         let textField = UITextField(frame: .zero)
         textField.isSecureTextEntry = isSecureField
@@ -40,7 +39,7 @@ struct CustomUITextField: UIViewRepresentable {
             attributes: [.foregroundColor: placeholderColor]
         )
         textField.delegate = context.coordinator
-        textField.textColor = .white // Set text color here
+        textField.textColor = .white
         return textField
     }
     
@@ -50,7 +49,7 @@ struct CustomUITextField: UIViewRepresentable {
     
     func makeCoordinator() -> Coordinator {
         Coordinator(text: $text, didBeginEditing: {
-            // Handle did begin editing if needed
+            
         })
     }
 }

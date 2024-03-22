@@ -17,4 +17,6 @@ enum MapViewState {
     case orderAccepted
     case orderpredelivery
     case orderDelivered
+    case orderCancelledByCustomer
+    case orderCancelledByDriver
 }

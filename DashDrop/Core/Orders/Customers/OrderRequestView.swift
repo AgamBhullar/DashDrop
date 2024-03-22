@@ -11,6 +11,7 @@ struct OrderRequestView: View {
     //@State private var selectedStoreType: StoreType = .ups
     @State private var selectedPackageType: PackageType = .box
     @State private var selectedQRCodeImage: UIImage?
+    @State private var isLoading = false
     @State private var isPrepaidOptionSelected = false
     @State private var isPackageTypeSelected = false
     @EnvironmentObject var homeViewModel: HomeViewModel
@@ -154,19 +155,19 @@ struct OrderRequestView: View {
             )
             
             //confirm order button
-            Button {
-                homeViewModel.selectedQRCodeImage = self.selectedQRCodeImage
-                homeViewModel.selectedPackageType = self.selectedPackageType
-                homeViewModel.requestOrder()
-            } label: {
-                Text("CONFIRM ORDER")
-                    .fontWeight(.bold)
-                    .frame(width: UIScreen.main.bounds.width - 32, height: 50)
-                    .background(isConfirmOrderEnabled() ? Color.red : Color.gray)
-                    .cornerRadius(10)
-                    .foregroundColor(.white)
+            Button(action: confirmOrder) {
+                if isLoading {
+                    ProgressView() // Shows a loading spinner
+                } else {
+                    Text("CONFIRM ORDER")
+                }
             }
-            .disabled(!isConfirmOrderEnabled())
+            .disabled(isLoading || !isConfirmOrderEnabled()) // Disable the button when loading
+            .frame(width: UIScreen.main.bounds.width - 32, height: 50)
+            .background(isConfirmOrderEnabled() ? Color.red : Color.gray)
+            .cornerRadius(10)
+            .foregroundColor(.white)
+            .padding(.bottom, 24)
         }
         .padding(.bottom, 24)
         .background(Color.theme.backgroundColor)
@@ -176,8 +177,18 @@ struct OrderRequestView: View {
     
     private func isConfirmOrderEnabled() -> Bool {
         return isPackageTypeSelected && isPrepaidOptionSelected
-        //return selectedQRCodeImage != nil
     }
+    
+    private func confirmOrder() {
+            isLoading = true // Start the loading indicator
+            homeViewModel.selectedQRCodeImage = self.selectedQRCodeImage
+            homeViewModel.selectedPackageType = self.selectedPackageType
+
+        homeViewModel.requestOrder {success in
+                // Completion handler after order request finishes
+                isLoading = false // Stop the loading indicator
+            }
+        }
 }
 
 //struct OrderRequestView_Previews: PreviewProvider {
