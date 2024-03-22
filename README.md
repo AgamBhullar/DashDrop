@@ -5,7 +5,7 @@
 - Make sure to build and run the project on two different phones/simulators.
 - Make sure to log in as a customer and driver on two different phones. One phone should be logged in as a customer and the other as a driver. 
 - You can either sign up for a new customer account and then create a new driver account once you're logged in as a customer.
-- Or you can use our pre registered accounuts belo:
+- Or you can use our pre registered accounts below:
 Customer Account log in email: asbhullar@ucdavis.edu
 Customer Account log in password: Bhullar1!
 Driver Account log in email: test1@gmail.com
