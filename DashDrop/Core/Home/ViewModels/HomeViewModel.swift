@@ -77,12 +77,42 @@ class HomeViewModel: NSObject, ObservableObject {
     
     //MARK: - User API
     
+//    func fetchUser() {
+//        service.$user
+//            .sink { user in
+//                guard let user = user else { return }
+//                self.currentUser = user
+//                
+//                if user.accountType == .customer {
+//                    self.fetchDrivers()
+//                    self.addOrderObserverForCustomer()
+//                } else {
+//                    self.addOrderObserverForDriver()
+//                }
+//            }
+//            .store(in: &cancellables)
+//    }
+    
     func fetchUser() {
-        service.$user
-            .sink { user in
-                guard let user = user else { return }
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+
+        Firestore.firestore().collection("users").document(uid).getDocument { [weak self] snapshot, error in
+            guard let self = self else { return }
+            if let error = error {
+                // Consider handling the error appropriately
+                print("Error fetching user: \(error.localizedDescription)")
+                return
+            }
+
+            guard let user = try? snapshot?.data(as: User.self) else {
+                // Handle the case where user data couldn't be decoded
+                print("Could not decode user")
+                return
+            }
+
+            DispatchQueue.main.async {
                 self.currentUser = user
-                
+
                 if user.accountType == .customer {
                     self.fetchDrivers()
                     self.addOrderObserverForCustomer()
@@ -90,8 +120,9 @@ class HomeViewModel: NSObject, ObservableObject {
                     self.addOrderObserverForDriver()
                 }
             }
-            .store(in: &cancellables)
+        }
     }
+
     
     func deleteOrder() {
         guard let order = order else { return }
@@ -144,9 +175,9 @@ extension HomeViewModel {
         Firestore.firestore().collection("orders")
             .whereField("customerUid", isEqualTo: currentUser.uid)
             .whereField("isCompletedForCustomer", isEqualTo: false)
-            .whereField("isCompletedForDriver", isEqualTo: false)
+            //.whereField("isCompletedForDriver", isEqualTo: false)
             .whereField("isRejectedForCustomer", isEqualTo: false)
-            .whereField("isRejectedForDriver", isEqualTo: false)
+            //.whereField("isRejectedForDriver", isEqualTo: false)
             .addSnapshotListener { snapshot, _ in
                 guard let change = snapshot?.documentChanges.first,
                         change.type == .added
@@ -300,6 +331,8 @@ extension HomeViewModel {
         
         Firestore.firestore().collection("orders")
             .whereField("driverUid", isEqualTo: currentUser.uid)
+            .whereField("isCompletedForDriver", isEqualTo: false)
+            .whereField("isRejectedForDriver", isEqualTo: false)
             .addSnapshotListener { snapshot, _ in
                 guard let change = snapshot?.documentChanges.first,
                         change.type == .added

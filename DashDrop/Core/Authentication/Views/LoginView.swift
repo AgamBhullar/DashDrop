@@ -89,6 +89,8 @@ struct LoginView: View {
                         
                         //sign in button
                         Button {
+                            showAlert = false // Reset alert visibility
+                            viewModel.signInErrorMessage = nil // Reset error message
                             viewModel.signIn(withEmail: email, password: password)
                         } label: {
                             HStack {
@@ -147,8 +149,11 @@ struct LoginView: View {
             }
         }
         .alert(isPresented: $showAlert) {
-            Alert(title: Text("Login Error"), message: Text(viewModel.signInErrorMessage ?? "Unknown error"), dismissButton: .default(Text("OK")))
+            Alert(title: Text("The email and password you entered don't match our records. "), message: Text(viewModel.signInErrorMessage ?? "Unknown error"), dismissButton: .default(Text("OK")))
         }
+//        .onChange(of: viewModel.signInErrorMessage) { _ in
+//            showAlert.toggle() // This ensures a state change and triggers the alert
+//        }
         .onChange(of: viewModel.signInErrorMessage) { newValue in
             showAlert = newValue != nil
         }

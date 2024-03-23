@@ -14,6 +14,7 @@ struct RegistrationView: View {
     @State private var confirmPassword = ""
     @State private var showingSuccessAlert = false
     @State private var alertMessage = ""
+    @State private var isLoading = false
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var viewModel: AuthViewModel
     @State private var animate = false
@@ -75,34 +76,24 @@ struct RegistrationView: View {
                         
                         Spacer()
                         
-                        Button {
-                            viewModel.registerUser(withEmail: email, 
-                                                   password: password,
-                                                   fullname: fullname) { success in
-                                if success {
-                                    // This closure is called after successful registration and user fetch.
-                                    DispatchQueue.main.async {
-                                        self.showingSuccessAlert = true
-                                    }
-                                } else {
-                                    // Handle registration failure
-                                    print("DEBUG: Failed to register as a user.")
+                        Button(action: signUpAction) {
+                            if isLoading {
+                                ProgressView() // Show progress indicator when isLoading is true
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    .scaleEffect(1.5)
+                            } else {
+                                HStack {
+                                    Text("SIGN UP")
+                                        .foregroundColor(.black)
+                                    Image(systemName: "arrow.right")
+                                        .foregroundColor(.black)
                                 }
+                                .frame(width: UIScreen.main.bounds.width - 32, height: 50)
+                                .scaleEffect(animate ? 1.1 : 1.0)
                             }
-                            //self.showingSuccessAlert = true
-                        } label: {
-                            HStack {
-                                Text("SIGN UP")
-                                    .foregroundColor(.black)
-                                
-                                Image(systemName: "arrow.right")
-                                    .foregroundColor(.black)
-                            }
-                            .frame(width: UIScreen.main.bounds.width - 32, height: 50)
-                            .scaleEffect(animate ? 1.1 : 1.0)
                         }
+                        .disabled(!formIsValid || isLoading)
                         .background(Color("CustomColor1"))
-                        .disabled(!formIsValid)
                         .opacity(formIsValid ? 1.0 : 0.5)
                         .cornerRadius(10)
                         .padding(.top, 24)
@@ -139,37 +130,13 @@ struct RegistrationView: View {
         }
     }
     
-    private func hideKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    private func signUpAction() {
+        isLoading = true // For testing, do not wait for completion
+        viewModel.registerUser(withEmail: email, password: password, fullname: fullname) { _ in }
     }
     
-    private func attemptRegistration() {
-        if email.isEmpty || !email.contains("@") {
-            alertMessage = "Please enter a valid email address."
-            showingSuccessAlert = true
-        } else if password.isEmpty || password.count <= 5 {
-            alertMessage = "Password must be at least 5 characters long."
-            showingSuccessAlert = true
-        } else if password != confirmPassword {
-            alertMessage = "Passwords must match."
-            showingSuccessAlert = true
-        } else if fullname.isEmpty {
-            alertMessage = "Please fill in all fields."
-            showingSuccessAlert = true
-        } else {
-            viewModel.registerUser(withEmail: email, password: password, fullname: fullname) { success in
-                DispatchQueue.main.async {
-                    if success {
-                        // Handle successful registration
-                        self.showingSuccessAlert = true
-                    } else {
-                        // Handle registration failure, update alert message and show alert
-                        self.alertMessage = "An error occurred during registration."
-                        self.showingSuccessAlert = true
-                    }
-                }
-            }
-        }
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

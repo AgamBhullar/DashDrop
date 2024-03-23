@@ -40,20 +40,6 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-//    func signIn(withEmail email: String, password: String) {
-//        Auth.auth().signIn(withEmail: email, password: password) { result, error in
-//            if let error = error {
-//                print("DEBUG: Failed to sign in with error \(error.localizedDescription)")
-//                return
-//            }
-//            
-//            print("DEBUG: Sign user in successfully")
-//
-//            self.userSession = result?.user
-//            self.fetchUser()
-//        }
-//    }
-    
     func signIn(withEmail email: String, password: String) {
         Auth.auth().signIn(withEmail: email, password: password) { result, error in
             if let error = error {
@@ -72,39 +58,87 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+//    func registerUser(withEmail email: String, password: String, fullname: String, completion: @escaping (Bool) -> Void) {
+//        guard let location = LocationManager.shared.userLocation else { return completion(false)}
+//        
+//        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+//            if let error = error {
+//                print("DEBUG: Failed to sign up with error \(error.localizedDescription)")
+//                return completion(false)
+//            }
+//
+//            guard let firebaseUser = result?.user else { return completion(false)  }
+//            self.userSession = firebaseUser
+//
+//            let user = User(
+//                fullname: fullname,
+//                email: email,
+//                uid: firebaseUser.uid,
+//                coordinates: GeoPoint(latitude: location.latitude, longitude: location.longitude),
+//                accountType: .customer
+//            )
+//
+//            self.currentUser = user
+//            guard let encodedUser = try? Firestore.Encoder().encode(user) else { return }
+//            Firestore.firestore().collection("users").document(firebaseUser.uid).setData(encodedUser) { err in
+//                if let err = err {
+//                    print("Error adding document: \(err)")
+//                    completion(false)
+//                } else {
+//                    self.fetchUser() 
+//                    completion(true)
+//                }
+//            }
+//        }
+//    }
+    
     func registerUser(withEmail email: String, password: String, fullname: String, completion: @escaping (Bool) -> Void) {
-        guard let location = LocationManager.shared.userLocation else { return completion(false)}
-        
+        print("DEBUG: Starting registration process")
+        guard let location = LocationManager.shared.userLocation else { return completion(false) }
+
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
             if let error = error {
                 print("DEBUG: Failed to sign up with error \(error.localizedDescription)")
-                return completion(false)
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+                return
             }
 
-            guard let firebaseUser = result?.user else { return completion(false)  }
+            guard let firebaseUser = result?.user else {
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+                return
+            }
             self.userSession = firebaseUser
-
-            let user = User(
-                fullname: fullname,
-                email: email,
-                uid: firebaseUser.uid,
-                coordinates: GeoPoint(latitude: location.latitude, longitude: location.longitude),
-                accountType: .customer
-            )
+            print("DEBUG: Firebase user created successfully, UID: \(firebaseUser.uid)")
+            let user = User(fullname: fullname, email: email, uid: firebaseUser.uid, coordinates: GeoPoint(latitude: location.latitude, longitude: location.longitude), accountType: .customer)
 
             self.currentUser = user
-            guard let encodedUser = try? Firestore.Encoder().encode(user) else { return }
-            Firestore.firestore().collection("users").document(firebaseUser.uid).setData(encodedUser) { err in
-                if let err = err {
-                    print("Error adding document: \(err)")
+            guard let encodedUser = try? Firestore.Encoder().encode(user) else {
+                DispatchQueue.main.async {
                     completion(false)
-                } else {
-                    self.fetchUser() 
-                    completion(true)
+                }
+                return
+            }
+
+            Firestore.firestore().collection("users").document(firebaseUser.uid).setData(encodedUser) { err in
+                DispatchQueue.main.async {
+                    if let err = err {
+                        print("Error adding document: \(err)")
+                        completion(false)
+                    } else {
+                        print("User document added successfully")
+                        self.fetchUser()
+                        completion(true)
+                    }
                 }
             }
         }
     }
+
+
     
     func registerDriver(withEmail email: String, password: String, fullname: String, completion: @escaping (Bool) -> Void) {
         guard let location = LocationManager.shared.userLocation else { return completion(false) }
