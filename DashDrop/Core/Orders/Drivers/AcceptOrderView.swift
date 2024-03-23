@@ -9,24 +9,38 @@ import SwiftUI
 import MapKit
 
 struct AcceptOrderView: View {
-    private let user: User
-    @State private var region: MKCoordinateRegion
+    let user: User
+    //@State private var region: MKCoordinateRegion
     let order: Order
     let annotationItem: DashDropLocation
     @EnvironmentObject var viewModel: HomeViewModel
     @Environment(\.presentationMode) var presentationMode
     
+//    init(order: Order, user: User) {
+//        let center = CLLocationCoordinate2D(latitude: order.pickupLocation.latitude,
+//                                            longitude: order.pickupLocation.longitude)
+//        let span = MKCoordinateSpan(latitudeDelta: 0.025,
+//                                    longitudeDelta: 0.025)
+//        self.region = MKCoordinateRegion(center: center, span: span)
+//        self.order = order
+//        self.annotationItem = DashDropLocation(title: order.pickupLocationName, coordinate: order.customerLocation.toCoordinate())
+//        
+//        self.user = user
+//    }
+    
     init(order: Order, user: User) {
-        let center = CLLocationCoordinate2D(latitude: order.pickupLocation.latitude,
-                                            longitude: order.pickupLocation.longitude)
-        let span = MKCoordinateSpan(latitudeDelta: 0.025,
-                                    longitudeDelta: 0.025)
-        self.region = MKCoordinateRegion(center: center, span: span)
-        self.order = order
-        self.annotationItem = DashDropLocation(title: order.pickupLocationName, coordinate: order.customerLocation.toCoordinate())
+            self.order = order
+            self.annotationItem = DashDropLocation(title: order.pickupLocationName, coordinate: order.customerLocation.toCoordinate())
+            self.user = user
+        }
         
-        self.user = user
-    }
+        private func computeRegion() -> MKCoordinateRegion {
+            let center = CLLocationCoordinate2D(latitude: order.pickupLocation.latitude,
+                                                longitude: order.pickupLocation.longitude)
+            let span = MKCoordinateSpan(latitudeDelta: 0.025,
+                                        longitudeDelta: 0.025)
+            return MKCoordinateRegion(center: center, span: span)
+        }
     
     var body: some View {
         if let user = viewModel.currentUser {
@@ -137,7 +151,7 @@ struct AcceptOrderView: View {
                     .padding(.horizontal)
                     
                     //map
-                    Map(coordinateRegion: $region, annotationItems: [annotationItem]) { item in
+                    Map(coordinateRegion: .constant(computeRegion()), annotationItems: [annotationItem]) { item in
                         MapMarker(coordinate: item.coordinate)
                     }
                     .frame(height: 220)
