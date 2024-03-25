@@ -15,6 +15,7 @@ class AuthViewModel: ObservableObject {
     @Published var userSession: FirebaseAuth.User?
     @Published var currentUser: User?
     @Published var signInErrorMessage: String?
+    static let shared = AuthViewModel() 
     
     private let service = UserService.shared
     private var cancellables = Set<AnyCancellable>()
@@ -40,11 +41,30 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func signIn(withEmail email: String, password: String) {
+//    func signIn(withEmail email: String, password: String) {
+//        Auth.auth().signIn(withEmail: email, password: password) { result, error in
+//            if let error = error {
+//                DispatchQueue.main.async {
+//                    self.signInErrorMessage = error.localizedDescription
+//                }
+//                return
+//            }
+//            
+//            // Success handling
+//            DispatchQueue.main.async {
+//                self.signInErrorMessage = nil
+//                self.userSession = result?.user
+//                self.fetchUser()
+//            }
+//        }
+//    }
+    
+    func signIn(withEmail email: String, password: String, completion: @escaping (Bool) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { result, error in
             if let error = error {
                 DispatchQueue.main.async {
                     self.signInErrorMessage = error.localizedDescription
+                    completion(false) // Sign-in failed
                 }
                 return
             }
@@ -54,9 +74,11 @@ class AuthViewModel: ObservableObject {
                 self.signInErrorMessage = nil
                 self.userSession = result?.user
                 self.fetchUser()
+                completion(true) // Sign-in succeeded
             }
         }
     }
+
     
 //    func registerUser(withEmail email: String, password: String, fullname: String, completion: @escaping (Bool) -> Void) {
 //        guard let location = LocationManager.shared.userLocation else { return completion(false)}

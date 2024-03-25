@@ -9,6 +9,8 @@ import SwiftUI
 import MapKit
 
 struct MapViewRepresentable: UIViewRepresentable {
+
+    
     
     let mapView = MKMapView()
     let locationManager = LocationManager.shared
@@ -185,42 +187,41 @@ extension MapViewRepresentable {
             
         }
         
-//        func addDriversToMap() {
-//            // Remove existing driver annotations
-//            let existingAnnotations = parent.mapView.annotations.filter { $0 is DriverAnnotation }
-//            parent.mapView.removeAnnotations(existingAnnotations)
-//            
-//            // Check if the current user is a driver and logged in
-//            if let currentUser = HomeViewModel.shared.currentUser, currentUser.accountType == .driver, let userLocation = LocationManager.shared.userLocation {
-//                // Create and add annotation for the current driver
-//                let driverAnnotation = DriverAnnotation(driver: currentUser)
-//                driverAnnotation.coordinate = userLocation
-//                DispatchQueue.main.async {
+//        @objc func updateAnnotations() {
+//            // Ensure UI updates are performed on the main thread
+//            DispatchQueue.main.async {
+//                // Remove existing driver annotations to reset the map's state
+//                let existingAnnotations = self.parent.mapView.annotations.filter { $0 is DriverAnnotation }
+//                self.parent.mapView.removeAnnotations(existingAnnotations)
+//                
+//                // Check if the current user is a driver and their location is known
+//                if let currentUser = HomeViewModel.shared.currentUser,
+//                   currentUser.accountType == .driver,
+//                   let userLocation = LocationManager.shared.userLocation {
+//                    
+//                    // Create an annotation for the driver's current location
+//                    let driverAnnotation = DriverAnnotation(driver: currentUser)
+//                    driverAnnotation.coordinate = userLocation
+//                    
+//                    // Add the driver's annotation to the map
 //                    self.parent.mapView.addAnnotation(driverAnnotation)
 //                }
 //            }
 //        }
         
-        @objc func updateAnnotations() {
-            // Ensure UI updates are performed on the main thread
+        func updateAnnotations() {
             DispatchQueue.main.async {
-                // Remove existing driver annotations to reset the map's state
-                let existingAnnotations = self.parent.mapView.annotations.filter { $0 is DriverAnnotation }
-                self.parent.mapView.removeAnnotations(existingAnnotations)
-                
-                // Check if the current user is a driver and their location is known
-                if let currentUser = HomeViewModel.shared.currentUser,
-                   currentUser.accountType == .driver,
-                   let userLocation = LocationManager.shared.userLocation {
-                    
-                    // Create an annotation for the driver's current location
-                    let driverAnnotation = DriverAnnotation(driver: currentUser)
-                    driverAnnotation.coordinate = userLocation
-                    
-                    // Add the driver's annotation to the map
+                self.parent.mapView.annotations.filter { $0 is DriverAnnotation }.forEach(self.parent.mapView.removeAnnotation)
+
+                if let user = self.parent.homeViewModel.currentUser, user.accountType == .driver, let location = self.parent.locationManager.userLocation {
+                    let driverAnnotation = DriverAnnotation(driver: user)
+                    driverAnnotation.coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
                     self.parent.mapView.addAnnotation(driverAnnotation)
+                } else {
+                    // No action needed if not a driver or no location available
                 }
             }
         }
+
     }
 }

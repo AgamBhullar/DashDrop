@@ -10,7 +10,8 @@ import SwiftUI
 struct LoginView: View {
     @State var email = ""
     @State var password = ""
-    @EnvironmentObject var viewModel: AuthViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var homeViewModel: HomeViewModel
     @State private var animate = false
     @State private var showAlert = false
     
@@ -90,8 +91,17 @@ struct LoginView: View {
                         //sign in button
                         Button {
                             showAlert = false // Reset alert visibility
-                            viewModel.signInErrorMessage = nil // Reset error message
-                            viewModel.signIn(withEmail: email, password: password)
+                            authViewModel.signInErrorMessage = nil // Reset error message
+                            authViewModel.signIn(withEmail: email, password: password) { success in
+                                if success {
+                                    // Sign-in succeeded
+                                    homeViewModel.handleUserRoleChanged()
+                                } else {
+                                    // Sign-in failed, possibly handle this case or show an error message
+                                    // The error message is already being set in the signIn method
+                                    showAlert = true // Show an alert if needed
+                                }
+                            }
                         } label: {
                             HStack {
                                 Text("SIGN IN")
@@ -149,12 +159,12 @@ struct LoginView: View {
             }
         }
         .alert(isPresented: $showAlert) {
-            Alert(title: Text("The email and password you entered don't match our records. "), message: Text(viewModel.signInErrorMessage ?? "Unknown error"), dismissButton: .default(Text("OK")))
+            Alert(title: Text("The email and password you entered don't match our records. "), message: Text(authViewModel.signInErrorMessage ?? "Unknown error"), dismissButton: .default(Text("OK")))
         }
 //        .onChange(of: viewModel.signInErrorMessage) { _ in
 //            showAlert.toggle() // This ensures a state change and triggers the alert
 //        }
-        .onChange(of: viewModel.signInErrorMessage) { newValue in
+        .onChange(of: authViewModel.signInErrorMessage) { newValue in
             showAlert = newValue != nil
         }
     }

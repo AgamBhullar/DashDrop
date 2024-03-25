@@ -123,6 +123,12 @@ class HomeViewModel: NSObject, ObservableObject {
         }
     }
 
+    func handleUserRoleChanged() {
+        self.order = nil
+        self.drivers.removeAll()
+        self.receipt = nil
+        fetchUser() // This will re-fetch user data and determine the correct role.
+    }
     
     func deleteOrder() {
         guard let order = order else { return }
