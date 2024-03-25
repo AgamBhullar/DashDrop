@@ -16,7 +16,8 @@ struct RegistrationView: View {
     @State private var alertMessage = ""
     @State private var isLoading = false
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var viewModel: AuthViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var homeViewModel: HomeViewModel
     @State private var animate = false
     
     var body: some View {
@@ -76,12 +77,21 @@ struct RegistrationView: View {
                         
                         Spacer()
                         
-                        Button(action: signUpAction) {
-                            if isLoading {
-                                ProgressView() // Show progress indicator when isLoading is true
-                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                    .scaleEffect(1.5)
-                            } else {
+                        Button {
+                            authViewModel.registerUser(withEmail: email,
+                                                     password: password,
+                                                     fullname: fullname) { success in
+                                if success {
+                                    // Sign-in succeeded
+                                    homeViewModel.handleUserRoleChanged()
+                                } else {
+                                    // Sign-in failed, possibly handle this case or show an error message
+                                    // The error message is already being set in the signIn method
+                                    //showAlert = true // Show an alert if needed
+                                }
+                            }
+                                
+                        } label: {
                                 HStack {
                                     Text("SIGN UP")
                                         .foregroundColor(.black)
@@ -90,23 +100,22 @@ struct RegistrationView: View {
                                 }
                                 .frame(width: UIScreen.main.bounds.width - 32, height: 50)
                                 .scaleEffect(animate ? 1.1 : 1.0)
-                            }
                         }
                         .disabled(!formIsValid || isLoading)
                         .background(Color("CustomColor1"))
                         .opacity(formIsValid ? 1.0 : 0.5)
                         .cornerRadius(10)
                         .padding(.top, 24)
-                        .alert(isPresented: $showingSuccessAlert) {
-                            Alert(
-                                title: Text("Success"),
-                                message: Text("Your user account has been created successfully."),
-                                dismissButton: .default(Text("OK")) {
-                                    // Action to perform when OK is tapped.
-                                    dismiss()
-                                }
-                            )
-                        }
+//                        .alert(isPresented: $showingSuccessAlert) {
+//                            Alert(
+//                                title: Text("Success"),
+//                                message: Text("Your user account has been created successfully."),
+//                                dismissButton: .default(Text("OK")) {
+//                                    // Action to perform when OK is tapped.
+//                                    dismiss()
+//                                }
+//                            )
+//                        }
                         .onAppear {
                             withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
                                 animate = true
@@ -130,10 +139,20 @@ struct RegistrationView: View {
         }
     }
     
-    private func signUpAction() {
-        isLoading = true // For testing, do not wait for completion
-        viewModel.registerUser(withEmail: email, password: password, fullname: fullname) { _ in }
-    }
+//    private func signUpAction() {
+//        isLoading = true // For testing, do not wait for completion
+//        authViewModel.registerUser(withEmail: email, password: password, fullname: fullname) { success, errorMessage in
+//            DispatchQueue.main.async {
+//                if success {
+//                    print("DEBUG: User registered successfully.")
+//                    // Proceed with any actions following successful registration
+//                } else {
+//                    print("DEBUG: Registration failed: \(errorMessage ?? "Unknown error")")
+//                    // Handle registration failure, perhaps by showing an alert to the user
+//                }
+//            }
+//        }
+//    }
     
     private func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
