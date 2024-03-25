@@ -86,6 +86,7 @@ struct PasswordResetView: View {
                     
                     Spacer()
                 }
+                .navigationBarBackButtonHidden(true)
             }
             .foregroundColor(.white)
         }

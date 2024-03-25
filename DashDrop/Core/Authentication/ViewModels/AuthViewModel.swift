@@ -81,7 +81,9 @@ class AuthViewModel: ObservableObject {
 
     
     func registerUser(withEmail email: String, password: String, fullname: String, completion: @escaping (Bool) -> Void) {
-        guard let location = LocationManager.shared.userLocation else { return completion(false)}
+        guard let location = LocationManager.shared.userLocation else {
+            print("DEBUG: Failed to get user's location")
+            return completion(false)}
         
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
             if let error = error {

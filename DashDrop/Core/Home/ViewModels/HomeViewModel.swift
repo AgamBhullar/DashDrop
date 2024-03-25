@@ -191,7 +191,7 @@ extension HomeViewModel {
                 
                 guard let order = try? change.document.data(as: Order.self) else { return }
                 self.order = order
-                print("DEBUG: Updated trip state is \(order.state)")
+                print("DEBUG: Updated order state is \(order.state)")
         }
     }
     

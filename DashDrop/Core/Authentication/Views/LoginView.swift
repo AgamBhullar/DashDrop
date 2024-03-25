@@ -14,6 +14,7 @@ struct LoginView: View {
     @EnvironmentObject var homeViewModel: HomeViewModel
     @State private var animate = false
     @State private var showAlert = false
+    @State private var navigateToPasswordReset = false
     
     var body: some View {
         NavigationStack {
@@ -42,7 +43,7 @@ struct LoginView: View {
                                              isSecureField: true)
                             
                             Button {
-                                
+                                navigateToPasswordReset = true
                             } label: {
                                 Text("Forgot Password?")
                                     .font(.system(size: 13, weight: .semibold))
@@ -148,6 +149,9 @@ struct LoginView: View {
                             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                         })
                         
+                        NavigationLink(destination: PasswordResetView(), isActive: $navigateToPasswordReset) {
+                            EmptyView()
+                        }
                     }
                 }
             
